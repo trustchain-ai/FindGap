@@ -1,3 +1,38 @@
+## v0.6.0 — 2026-06-03 · 三节点 · 零落盘 · 大道至简
+
+### 范式转身
+
+**FROM**（v0.5）：PASS/FAIL 二值门禁 + [FAIL] 五字段模板 + knockoff 清单残留
+**TO**（v0.6）：三节点（照→查→亮） + 零静态数据落盘 + 每次现查行业真实数据
+
+**驱动**：11 轮用户对话 + 4 次方向校正 + 2 轮 workflow 交叉验证 + 自照 dogfood 96.7% 误报率实证
+
+### 核心变更
+
+- **三节点架构**：照（11 招扫 prompt）→ 查（≥ 3 次 WebSearch，≥ 2 条互相印证）→ 亮（并列展示真实来源 + URL）
+- **零落盘**：不维护任何静态锚点库/小抄库/知识库，行业数据每次现查
+- **四红线**：三节点上限 / 不落盘 / URL 真实 / 不替用户决策
+- **三文件**：项目从 36 文件砍到 README + SKILL.md + manifest.json 三核心
+
+### 砍掉清单（不可逆）
+
+- 所有死代码（.bak / references/ / templates/ / benchmarks/ / scripts/ / INSTALL.md / SELF_INSTALL.md）
+- PASS/FAIL 二值门禁 + [FAIL] 五字段模板
+- 锚点库/小抄库概念（改为现查）
+- 5 步 Research Protocol（砍为三节点）
+- manifest.json 全部废弃字段（severityScheme / cognitiveLayers / gapIdFormat / compatibility / feedbackHook）
+
+### 产物
+
+| 文件 | v0.5 | v0.6 |
+|------|------|------|
+| README.md | 264 行 | 42 行 |
+| SKILL.md | 241 行 | 98 行 |
+| manifest.json | 99 行（JSON 语法损坏） | 21 行（PASS） |
+| 项目文件数 | 36 | 24 |
+
+---
+
 ## v0.5.0 — 2026-06-02 · 11 招照妖 · 穷尽 171 → Top 11 · PASS/FAIL 二值转身
 
 ### 🔪 核心定位转身

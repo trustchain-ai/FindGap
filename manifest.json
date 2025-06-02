@@ -1,99 +1,21 @@
 {
   "slug": "zhaoyaojing",
-  "version": "0.5.0",
-  "displayName": "照妖镜 · 11 招",
-  "description": "流程交接点的 gap 一招定位器。穷尽 171 条协作根因（10 维度）取 ROI Top 11，语义检查 + grep/模板扫描上游产物。照出原形句给上游迭代。PASS/FAIL 二值门禁：PASS 才能进入下一流程。小而美 —— 单文件 SKILL.md + 几个真实示例。",
+  "version": "0.6.0",
+  "displayName": "照妖镜",
+  "description": "在你按 Enter 把 prompt 发给 AI 之前，按 11 招照一下。每处含混现查行业真实数据——不落盘、不编造、不评分。大道至简，三节点。",
   "triggerPhrases": [
+    "/照",
     "/照妖镜",
-    "照一下",
-    "mirror",
-    "审一下",
-    "有没有遗漏",
-    "鸡同鸭讲",
-    "盲人摸象",
-    "为什么总返工",
-    "能进下一步吗",
-    "靠谱吗",
-    "检查盲点",
-    "/zhaoyaojing-feedback"
+    "照一下"
   ],
   "entrypoint": "skill/照妖镜.skill.md",
   "license": "MIT",
   "homepage": "https://github.com/290963249/zhaoyaojing",
-  "minRuntime": {
-    "claude-code": "2.1.145",
-    "codex-cli": "0.40.0"
-  },
-  "compatibility": {
-    "verified": [
-      "Claude Code"
-    ],
-    "experimental": [
-      "Hermes",
-      "Cursor (Agent mode)",
-      "Cline",
-      "Continue",
-      "Roo"
-    ],
-    "declared_only": [
-      "Codex CLI",
-      "OpenAI Responses API"
-    ],
-    "note": "verified=实测全流程跑通；experimental=声明兼容但部分流程需自行验证；declared_only=仅声明接入路径，未端到端验证。v0.3 CHANGELOG 中曾误标 Hermes/Codex 三平台跑通，已于 v0.4 修正——以本字段为权威。"
-  },
-  "gapTypes": "v0.5 已从 67 信号点精简为 11 条 ROI 最高根因规则（覆盖 10 维度/171 条根因的 Top 6.4%），详见 skill/照妖镜.skill.md 规则表。旧 G1-G18 分类体系已弃用。"
-  "cognitiveLayers": [
-    "known-unknown（已知的未知）",
-    "unknown-unknown（未知的未知）",
-    "known-flawed-preference（已知的偏好-带瑕疵）"
-  ],
-  "phases": [
-    "Phase 1 Scan (扫描) — 11 条规则逐条执行：语义检查 (S- 类) / grep+模板 (其余)",
-    "Phase 2 Output (输出) — 精简版 + [FAIL] 五字段原形块",
-    "Phase 3 Feedback (反馈) — accept/reject/fixed 写入 .zhaoyaojing/feedback.jsonl"
-  ],
   "redlines": [
-    "PASS/FAIL 二值 — 不引入分数/严重度/加权评分",
-    "杜绝虚假 — 不编造数字 / 不立未用上的协议位",
-    "不超 11 条规则 — v0.5 锁定，新增需先砍旧",
-    "不依赖记忆抑制 gap — 同产物再提交仍全量扫",
-    "不替 agent 干活 — 给规则不给检测器，给原形句不给长篇补齐文案"
+    "三节点（照→查→亮）— 多一步就是妖",
+    "不评分不审问不补全 — 镜子只反射",
+    "不落盘任何静态数据 — 行业基准每次现查",
+    "URL 必须真实可点击 — 编造一次信用归零"
   ],
-  "ruleSummary": "11 条 ROItop 根因规则（S-PERF / S-QUANT / S-NFR / R-DOD / G-WHY / G-NOGO / I-SSOT / I-ADR / V-NAME / V-STAKE / V-LAYER），穷尽自 171 条根因（10 维度），取三维交集（频率×代价×可拦截）Top 6.4%",
-  "outputTemplate": "[FAIL] <代号> <名称>\n  file: <路径>:<行号>\n  原形: \"<逐字引用>\"\n  why: <一句话>\n  补齐: <最小补齐方向>",
-  "severityScheme": {
-    "P0": {
-      "emoji": "🔴",
-      "sla": "24h",
-      "gate": "阻合并+阻发版"
-    },
-    "P1": {
-      "emoji": "🟡",
-      "sla": "本迭代",
-      "gate": "阻发版"
-    },
-    "P2": {
-      "emoji": "🟢",
-      "sla": "下迭代",
-      "gate": "非阻断"
-    },
-    "P3": {
-      "emoji": "⚪",
-      "sla": "无",
-      "gate": "非阻断"
-    },
-    "Drop": {
-      "emoji": "🚫",
-      "sla": "-",
-      "gate": "关闭"
-    }
-  },
-  "gapIdFormat": "G{family}-{idx}#{shortHash} | family ∈ G1-G18 子项码（如 G14.M / G9.2 / G16）禁用业务域码 | shortHash=sha1(location+evidence)[0:6]",
-  "feedbackHook": {
-    "command": "/zhaoyaojing-feedback accept|reject|fixed <代号>",
-    "storage": "<artifact-root>/.zhaoyaojing/feedback.jsonl"
-  },
-  "selfCheckItems": "v0.5 已砍自检清单 —— 11 条规则本身即 self-check",
-  "totalSubItems": "G1-G18 67 信号已废弃 · v0.5 = 11 条根因规则（穷尽自 171 条 / Top 6.4%）",
-  "corePrinciple": "小而美 · 一招精准 · PASS/FAIL 二值 · 照出原形给上游迭代（v0.5）"
+  "corePrinciple": "大道至简 · 三节点 · 零落盘 · 让 AI 严格一次 (v0.6)"
 }
