@@ -243,12 +243,31 @@ Claude：[检测到关键词，加载照妖镜] [自动开跑]
 
 ## 8. 版本规划
 
-| 版本 | 范围 | 状态 |
-|------|------|------|
-| **v0.1**（当前）| Skill 文件 + 4 阶段流水线 + 5 个核心 gap 类型 + 决策矩阵 | 进行中 |
-| v0.2 | 增加历史 gap 记忆（用 Claude built-in memory）+ 反馈学习 | 规划 |
-| v0.3 | MCP Server 形态，让 Cursor / Cline / Codex 也能调 | 规划 |
-| v0.4 | 异源对照（Claude 调 GPT / Gemini 做独立审查） | 规划 |
+> **设计哲学**：每版可独立验证、不严格线性依赖、用条件触发的二阶段交付绑死止损线、把不可被吸收性押在领域 know-how 与反共识产品观上，而不是工程外壳。
+>
+> 详见 [ROADMAP.md](ROADMAP.md)。
+
+| 版本 | 范围 | 状态 | 预计 |
+|------|------|------|------|
+| **v0.1** | 12KB SKILL.md + 4 阶段流水线（Detect/Decide/Eliminate/Converge）+ **8 类 gap**（G1-G8）+ **8×3=24 决策矩阵** + 4 类领域 checklist（PRD/技术方案/PR/决策）+ 6 条红线 | **已发布草稿，未经生产验证** | ✅ 已完成 |
+| **v0.2-alpha** | 项目本地持久化骨架（`cwd/.zhaoyaojing/gaps.jsonl`）+ 项目根自动检测 + no-persist 降级 + Phase 1 复发列 + schema 显式版本化。**反馈学习未启用** | 计划中 | 4 周 |
+| **v0.2-beta** | LLM-as-fingerprint 语义匹配 + 被动批注（`!ignore`/`!confirm`）+ blacklist/domain-hints。**仅在 alpha 30 天后真有重复 pattern 时启动** | 条件触发 | +3-4 周 |
+| **v0.3** | 单 tool MCP server（`zhaoyaojing_check`）+ Tier 1 客户端（Claude Desktop + Cursor）+ stdio only + 中立 core prompt 单一事实源。**定位：显式照妖镜，非隐式触发** | 计划中 | 4-5 周 |
+| **v0.4 Layer-0** | 反向审视协议（5 种敌对人格 + 三层差异呈现 `[HIGH-CONFIDENCE]/[LIKELY]/[DIVERGENT]`）+ 零 key 零成本默认开启。**不依赖任何外部 API** | 计划中 | 2 周 |
+| **v0.4 Layer-1** | 单副模型异源对照（GPT-4o）+ 显式触发 `/zhaoyaojing --cross-check` + $5/月硬上限 + legacy-output 兼容。**仅 baseline 实验召回率 ≥15% 才发布** | 条件触发 | +3 周 |
+
+**版本依赖图**（不严格线性，多路径可并行）：
+
+```
+v0.1（draft）
+ ├──> v0.2-alpha（持久化骨架，schema 不冻结）
+ │     └──> v0.2-beta（条件触发：alpha 30 天后真有重复 pattern）
+ ├──> v0.3（直接可做，不依赖 v0.2）
+ └──> v0.4 Layer-0（直接可做，零依赖）
+       └──> v0.4 Layer-1（仅依赖 baseline 实验通过）
+```
+
+可跳跃路径：`v0.1 → v0.4 Layer-0`（最高 ROI 路径）｜`v0.1 → v0.3`（仅 Skill 用户不需要）。
 
 ---
 
