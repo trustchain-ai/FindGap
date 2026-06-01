@@ -108,13 +108,108 @@ zhaoyaojing/
 
 ## 6. 安装与使用
 
-### 装入 Claude Code
+### 🍎 macOS / Linux 安装
+
+#### 装入 Claude Code
 
 ```bash
-# 将 skill/照妖镜.skill.md 复制到 Claude Code 的 skills 目录
-mkdir -p ~/.claude/skills
-cp skill/照妖镜.skill.md ~/.claude/skills/
+# 1. 克隆仓库（或更新已有副本）
+git clone https://github.com/290963249/zhaoyaojing.git
+cd zhaoyaojing
+
+# 2. 创建 Skill 目录并复制文件（注意：必须是目录形式 zhaoyaojing/SKILL.md）
+mkdir -p ~/.claude/skills/zhaoyaojing
+cp skill/照妖镜.skill.md ~/.claude/skills/zhaoyaojing/SKILL.md
+
+# 3. 验证
+ls ~/.claude/skills/zhaoyaojing/SKILL.md && echo "✅ 安装成功"
 ```
+
+#### 装入 Hermes（可选，多 profile）
+
+```bash
+# 一键装到所有 5 个 profile（含 leader）
+for p in architect leader ops research reviewer; do
+  mkdir -p ~/.hermes/profiles/$p/skills/zhaoyaojing
+  cp skill/照妖镜.skill.md ~/.hermes/profiles/$p/skills/zhaoyaojing/SKILL.md
+done
+
+# 或者只装到全局 Hermes（所有 profile 共享）
+mkdir -p ~/.hermes/skills/zhaoyaojing
+cp skill/照妖镜.skill.md ~/.hermes/skills/zhaoyaojing/SKILL.md
+```
+
+#### 卸载
+
+```bash
+rm -rf ~/.claude/skills/zhaoyaojing                    # Claude Code
+rm -rf ~/.hermes/skills/zhaoyaojing                    # Hermes 全局
+for p in architect leader ops research reviewer; do    # Hermes 各 profile
+  rm -rf ~/.hermes/profiles/$p/skills/zhaoyaojing
+done
+```
+
+---
+
+### 🪟 Windows 安装
+
+#### 前置条件
+
+- 安装 [Git for Windows](https://git-scm.com/download/win)（自带 Git Bash）
+- 安装 [Claude Code Desktop](https://claude.com/claude-code)
+- 推荐使用 **PowerShell 7+** 或 **Git Bash**
+
+#### 装入 Claude Code（PowerShell）
+
+```powershell
+# 1. 克隆仓库
+git clone https://github.com/290963249/zhaoyaojing.git
+cd zhaoyaojing
+
+# 2. 创建 Skill 目录并复制文件
+New-Item -ItemType Directory -Path "$env:USERPROFILE\.claude\skills\zhaoyaojing" -Force | Out-Null
+Copy-Item "skill\照妖镜.skill.md" "$env:USERPROFILE\.claude\skills\zhaoyaojing\SKILL.md"
+
+# 3. 验证
+if (Test-Path "$env:USERPROFILE\.claude\skills\zhaoyaojing\SKILL.md") {
+    Write-Host "✅ 安装成功" -ForegroundColor Green
+}
+```
+
+#### 装入 Claude Code（Git Bash / WSL）
+
+```bash
+# 与 macOS 命令一致（Git Bash 和 WSL 兼容 Unix 风格路径）
+git clone https://github.com/290963249/zhaoyaojing.git
+cd zhaoyaojing
+mkdir -p ~/.claude/skills/zhaoyaojing
+cp skill/照妖镜.skill.md ~/.claude/skills/zhaoyaojing/SKILL.md
+```
+
+> ⚠️ Windows 用户注意：
+> - `~/.claude/skills/` 在 Windows 实际路径是 `C:\Users\<你的用户名>\.claude\skills\`
+> - 文件名带中文（"照妖镜.skill.md"）在 Windows 兼容，但建议保留 `SKILL.md` 作为最终文件名（避免编码问题）
+> - PowerShell 默认编码可能影响 Markdown 中文显示，建议把 PowerShell 默认编码改为 UTF-8：`[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+
+#### 卸载（PowerShell）
+
+```powershell
+Remove-Item -Recurse -Force "$env:USERPROFILE\.claude\skills\zhaoyaojing"
+```
+
+---
+
+### 🚀 一键安装脚本（macOS / Linux）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/290963249/zhaoyaojing/main/skill/照妖镜.skill.md \
+  -o /tmp/zhaoyaojing-skill.md && \
+  mkdir -p ~/.claude/skills/zhaoyaojing && \
+  mv /tmp/zhaoyaojing-skill.md ~/.claude/skills/zhaoyaojing/SKILL.md && \
+  echo "✅ 照妖镜已安装到 Claude Code"
+```
+
+---
 
 ### 使用
 
