@@ -2,7 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Skill](https://img.shields.io/badge/Claude_Code-Skill-blueviolet)](skill/照妖镜.skill.md)
-[![Version](https://img.shields.io/badge/version-v0.1-blue)](README.md)
+[![Version](https://img.shields.io/badge/version-v0.2.0-blue)](CHANGELOG.md)
+[![Platforms](https://img.shields.io/badge/platforms-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20Cursor%20%7C%20Cline%20%7C%20...-green)](SELF_INSTALL.md)
 
 > 在 Claude Code / Codex / 任意 Agent 与人之间，**识别 gap → 推荐最优消除手段 → 多轮收敛**的 Skill。
 >
@@ -243,31 +244,36 @@ Claude：[检测到关键词，加载照妖镜] [自动开跑]
 
 ## 8. 版本规划
 
-> **设计哲学**：每版可独立验证、不严格线性依赖、用条件触发的二阶段交付绑死止损线、把不可被吸收性押在领域 know-how 与反共识产品观上，而不是工程外壳。
+> **设计哲学**：每版可独立验证、不严格线性依赖、用学术证据钉死什么不做、把不可被吸收性押在领域 know-how 与反共识产品观上，而不是工程外壳。
 >
-> 详见 [ROADMAP.md](ROADMAP.md)。
+> 详见 [ROADMAP.md](ROADMAP.md) 和 [CHANGELOG.md](CHANGELOG.md)。
 
 | 版本 | 范围 | 状态 | 预计 |
 |------|------|------|------|
-| **v0.1** | 12KB SKILL.md + 4 阶段流水线（Detect/Decide/Eliminate/Converge）+ **8 类 gap**（G1-G8）+ **8×3=24 决策矩阵** + 4 类领域 checklist（PRD/技术方案/PR/决策）+ 6 条红线 | **已发布草稿，未经生产验证** | ✅ 已完成 |
-| **v0.2-alpha** | 项目本地持久化骨架（`cwd/.zhaoyaojing/gaps.jsonl`）+ 项目根自动检测 + no-persist 降级 + Phase 1 复发列 + schema 显式版本化。**反馈学习未启用** | 计划中 | 4 周 |
-| **v0.2-beta** | LLM-as-fingerprint 语义匹配 + 被动批注（`!ignore`/`!confirm`）+ blacklist/domain-hints。**仅在 alpha 30 天后真有重复 pattern 时启动** | 条件触发 | +3-4 周 |
-| **v0.3** | 单 tool MCP server（`zhaoyaojing_check`）+ Tier 1 客户端（Claude Desktop + Cursor）+ stdio only + 中立 core prompt 单一事实源。**定位：显式照妖镜，非隐式触发** | 计划中 | 4-5 周 |
-| **v0.4 Layer-0** | 反向审视协议（5 种敌对人格 + 三层差异呈现 `[HIGH-CONFIDENCE]/[LIKELY]/[DIVERGENT]`）+ 零 key 零成本默认开启。**不依赖任何外部 API** | 计划中 | 2 周 |
-| **v0.4 Layer-1** | 单副模型异源对照（GPT-4o）+ 显式触发 `/zhaoyaojing --cross-check` + $5/月硬上限 + legacy-output 兼容。**仅 baseline 实验召回率 ≥15% 才发布** | 条件触发 | +3 周 |
+| **v0.1.0** | 12KB SKILL.md + 4 阶段流水线 + **8 类 gap**（G1-G8）+ 8×3=24 决策矩阵 + 4 类领域 checklist + 6 红线 | 已发布草稿 | ✅ |
+| **v0.2.0** ⭐ | 10.5KB SKILL.md + **G1-G14（41 子项）** + 认知 3 分法独立扫描 + **SMART 双向**（G14.S/M/A/R/T） + 同行业对标 Tier 1-3 + ROI 三维评分（truth/importance/urgency）+ 平台无关化 + benchmarks/ + references/ + SELF_INSTALL.md + manifest.json | **已发布** | ✅ 当前 |
+| **v0.3** | 同行业对标 Tier-1 扩到 10 域（payment/IM/POS/observability 等）+ benchmarks/ 失败模式横扫库 + 合规反向清单（PCI/GDPR/PIPL） | 计划中 | 3-4 周 |
+| **v0.4** | 反向审视协议（5 种敌对人格 + 三层差异呈现 `[HIGH-CONFIDENCE]/[LIKELY]/[DIVERGENT]`）+ 零外部 API 依赖 | 计划中 | 2 周 |
+| **v0.5** | 异源对照（单副模型 GPT-4o + $5/月硬上限）—— **仅 baseline 实验召回率 ≥15% 才发布** | 条件触发 | +3 周 |
+
+**v0.2.0 核心变更**（已落地）：
+
+- 🚀 **永久砍掉记忆机制**——基于 Einstellung / Confirmation Bias / Alarm Fatigue / Catastrophic Remembering 四条学术机制
+- 🎯 **召回率目标 45-55% → 85-92%**（Critical/High 类 ≥ 95%）
+- 🔬 **认知 3 分法 × G1-G14 = 42 个正交扫描组合**
+- 🌍 **支持 10+ 平台**（Claude / Codex / Hermes / Cursor / Cline / Continue / Roo / OpenAI Responses / generic SDK / fallback）
+- 📐 **SMART 双向应用**：约束 AI 输出 + 扫描产物 unSMART 表达
+- 🛡️ **10 红线**（从 6 条扩展）
 
 **版本依赖图**（不严格线性，多路径可并行）：
 
 ```
-v0.1（draft）
- ├──> v0.2-alpha（持久化骨架，schema 不冻结）
- │     └──> v0.2-beta（条件触发：alpha 30 天后真有重复 pattern）
- ├──> v0.3（直接可做，不依赖 v0.2）
- └──> v0.4 Layer-0（直接可做，零依赖）
-       └──> v0.4 Layer-1（仅依赖 baseline 实验通过）
+v0.1.0 → v0.2.0 (当前) ─┬─→ v0.3 (Tier-1 标杆扩展)
+                         ├─→ v0.4 (反向审视，零依赖)
+                         └─→ v0.5 (异源对照，条件触发)
 ```
 
-可跳跃路径：`v0.1 → v0.4 Layer-0`（最高 ROI 路径）｜`v0.1 → v0.3`（仅 Skill 用户不需要）。
+可跳跃路径：`v0.2.0 → v0.4`（最高 ROI 路径，零外部依赖）
 
 ---
 
