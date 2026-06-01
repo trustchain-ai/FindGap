@@ -1,6 +1,6 @@
 {
   "slug": "zhaoyaojing",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "displayName": "照妖镜 Mirror Skill",
   "description": "在用户和 AI 协作的任何节点（评审 PRD / 评 PR / 审方案 / 看对话 / 看决策）识别 gap、推荐最优消除手段、多轮收敛到对齐。当用户说\"照一下\"\"有没有遗漏\"\"我没想到什么\"\"帮我看看这个对不对\"\"这方案靠谱吗\"\"检查盲点\"\"审一下\"或类似需要\"反向审视\"的场景时自动加载。",
   "triggerPhrases": [
@@ -12,7 +12,9 @@
     "靠谱吗",
     "我没想到什么",
     "检查盲点",
-    "帮我看看这个对不对"
+    "帮我看看这个对不对",
+    "/zhaoyaojing-feedback",
+    "/zhaoyaojing-rescan"
   ],
   "entrypoint": "skill/照妖镜.skill.md",
   "license": "MIT",
@@ -22,15 +24,42 @@
     "codex-cli": "0.40.0"
   },
   "compatibility": {
-    "claude-code": { "status": "verified", "note": "目录式安装到 ~/.claude/skills/zhaoyaojing/SKILL.md" },
-    "codex-cli": { "status": "verified", "note": "目录式安装到 ~/.codex/skills/zhaoyaojing/SKILL.md" },
-    "hermes": { "status": "verified", "note": "目录式安装到 ~/.hermes/skills/zhaoyaojing/SKILL.md，支持 5 个 profile" },
-    "cursor": { "status": "likely", "note": "需 flatten 为 .cursor/rules/zhaoyaojing.mdc + 注入 alwaysApply/globs" },
-    "cline": { "status": "likely", "note": "flatten 为 .clinerules/zhaoyaojing.md，单文件" },
-    "continue": { "status": "likely", "note": "flatten 为 .continue/rules/zhaoyaojing.md，部分版本规则被忽略" },
-    "roo-code": { "status": "likely", "note": "flatten 为 .roo/rules/zhaoyaojing.md" },
-    "openai-responses": { "status": "likely", "note": "整包 zip POST 到 /v1/skills" },
-    "generic-sdk": { "status": "fallback", "note": "通过 ~/.agents/skills/ 通用路径 + loader snippet" }
+    "claude-code": {
+      "status": "verified",
+      "note": "目录式安装到 ~/.claude/skills/zhaoyaojing/SKILL.md"
+    },
+    "codex-cli": {
+      "status": "verified",
+      "note": "目录式安装到 ~/.codex/skills/zhaoyaojing/SKILL.md"
+    },
+    "hermes": {
+      "status": "verified",
+      "note": "目录式安装到 ~/.hermes/skills/zhaoyaojing/SKILL.md，支持 5 个 profile"
+    },
+    "cursor": {
+      "status": "likely",
+      "note": "需 flatten 为 .cursor/rules/zhaoyaojing.mdc + 注入 alwaysApply/globs"
+    },
+    "cline": {
+      "status": "likely",
+      "note": "flatten 为 .clinerules/zhaoyaojing.md，单文件"
+    },
+    "continue": {
+      "status": "likely",
+      "note": "flatten 为 .continue/rules/zhaoyaojing.md，部分版本规则被忽略"
+    },
+    "roo-code": {
+      "status": "likely",
+      "note": "flatten 为 .roo/rules/zhaoyaojing.md"
+    },
+    "openai-responses": {
+      "status": "likely",
+      "note": "整包 zip POST 到 /v1/skills"
+    },
+    "generic-sdk": {
+      "status": "fallback",
+      "note": "通过 ~/.agents/skills/ 通用路径 + loader snippet"
+    }
   },
   "gapTypes": {
     "G1-G8": "v0.1 基础逻辑层（主观锚词/隐含假设/角色心智漂移/未问的关键问题/来源缺失/反例缺失/不可证伪/责任真空）",
@@ -50,7 +79,9 @@
     "Phase 1 Detect (识别)",
     "Phase 2 Decide (决策)",
     "Phase 3 Eliminate (消除)",
-    "Phase 4 Converge (收敛，最多 3 轮)"
+    "Phase 4 Converge (收敛，最多 3 轮)",
+    "Output Contract (双轨报告)",
+    "Feedback Hook (gap 唯一 ID)"
   ],
   "redlines": [
     "宁错杀不放过",
