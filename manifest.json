@@ -24,42 +24,21 @@
     "codex-cli": "0.40.0"
   },
   "compatibility": {
-    "claude-code": {
-      "status": "verified",
-      "note": "目录式安装到 ~/.claude/skills/zhaoyaojing/SKILL.md"
-    },
-    "codex-cli": {
-      "status": "verified",
-      "note": "目录式安装到 ~/.codex/skills/zhaoyaojing/SKILL.md"
-    },
-    "hermes": {
-      "status": "verified",
-      "note": "目录式安装到 ~/.hermes/skills/zhaoyaojing/SKILL.md，支持 5 个 profile"
-    },
-    "cursor": {
-      "status": "likely",
-      "note": "需 flatten 为 .cursor/rules/zhaoyaojing.mdc + 注入 alwaysApply/globs"
-    },
-    "cline": {
-      "status": "likely",
-      "note": "flatten 为 .clinerules/zhaoyaojing.md，单文件"
-    },
-    "continue": {
-      "status": "likely",
-      "note": "flatten 为 .continue/rules/zhaoyaojing.md，部分版本规则被忽略"
-    },
-    "roo-code": {
-      "status": "likely",
-      "note": "flatten 为 .roo/rules/zhaoyaojing.md"
-    },
-    "openai-responses": {
-      "status": "likely",
-      "note": "整包 zip POST 到 /v1/skills"
-    },
-    "generic-sdk": {
-      "status": "fallback",
-      "note": "通过 ~/.agents/skills/ 通用路径 + loader snippet"
-    }
+    "verified": [
+      "Claude Code",
+      "Hermes"
+    ],
+    "experimental": [
+      "Cursor (Agent mode)",
+      "Cline",
+      "Continue",
+      "Roo"
+    ],
+    "declared_only": [
+      "Codex CLI",
+      "OpenAI Responses API"
+    ],
+    "note": "只有 verified 列表是实测通过；其他需用户自行验证"
   },
   "gapTypes": {
     "G1-G8": "v0.1 基础逻辑层（主观锚词/隐含假设/角色心智漂移/未问的关键问题/来源缺失/反例缺失/不可证伪/责任真空）",
@@ -89,5 +68,51 @@
     "禁止主观词输出",
     "不编造数字",
     "不超 3 轮"
-  ]
+  ],
+  "doubleTrackTemplate": {
+    "summary": "≤200字 / ≤12行 / emoji必现 / 必含下一步行",
+    "detailed": "每条P0/P1含四件套（定位+三法命中+复查命令+误报申诉）"
+  },
+  "severityScheme": {
+    "P0": {
+      "emoji": "🔴",
+      "sla": "24h",
+      "gate": "阻合并+阻发版"
+    },
+    "P1": {
+      "emoji": "🟡",
+      "sla": "本迭代",
+      "gate": "阻发版"
+    },
+    "P2": {
+      "emoji": "🟢",
+      "sla": "下迭代",
+      "gate": "非阻断"
+    },
+    "P3": {
+      "emoji": "⚪",
+      "sla": "无",
+      "gate": "非阻断"
+    },
+    "Drop": {
+      "emoji": "🚫",
+      "sla": "-",
+      "gate": "关闭"
+    }
+  },
+  "gapIdFormat": "G{family}-{idx}#{shortHash} | shortHash=sha1(location+evidence)[0:6]",
+  "feedbackHook": {
+    "command": "/zhaoyaojing-feedback <id> <accepted|rejected|known|fix-applied> [reason]",
+    "rescan": "zhaoyaojing rescan <reportId>",
+    "storage": "<artifact-root>/.zhaoyaojing/feedback.jsonl"
+  },
+  "selfCheckItems": [
+    "C1 双轨齐全",
+    "C2 严重度词表合规",
+    "C3 精简版硬约束",
+    "C4 详细版四件套",
+    "C5 可复查性"
+  ],
+  "totalSubItems": "G1-G14 共 46 子项",
+  "corePrinciple": "宁错杀不放过"
 }
