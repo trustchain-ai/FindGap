@@ -167,7 +167,7 @@ cp -R zhaoyaojing/skill/照妖镜.skill.md ~/.claude/skills/zhaoyaojing/SKILL.md
 | Cursor | `ls .cursor/rules/zhaoyaojing.mdc` + Settings 中可见 |
 | Cline / Continue / Roo | `ls` 对应规则目录 + 一次冒烟 prompt |
 
-成功后输出：`Skill zhaoyaojing@0.2.0 installed at <path>. Try: 照一下`
+成功后输出：`Skill zhaoyaojing@0.3.0 installed at <path>. Try: 照一下`
 
 ---
 
