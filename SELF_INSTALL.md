@@ -22,7 +22,7 @@
 ```json
 {
   "slug": "zhaoyaojing",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "displayName": "照妖镜 Mirror Skill",
   "description": "在用户和 AI 协作的任何节点识别 gap、推荐最优消除手段、多轮收敛到对齐。",
   "triggerPhrases": ["/照妖镜", "照一下", "mirror", "审一下", "有没有遗漏", "靠谱吗"],
@@ -111,7 +111,7 @@
 | **Gate 1 Filesystem** | `test -s $TARGET`（或目录形态 `test -d $TARGET && test -s $TARGET/SKILL.md`） |
 | **Gate 2 Schema** | YAML frontmatter 可解析，`name` + `description` 存在，slug 与 manifest 一致 |
 | **Gate 3 Registry** | 跑平台原生 list 命令并 grep slug（Claude Code: `ls ~/.claude/skills/`；Codex: `ls ~/.codex/skills/`；Hermes: `hermes skills list`；Cursor: `ls .cursor/rules/`） |
-| **Gate 4 Smoke trigger** | 输出 `Skill zhaoyaojing@0.2.0 installed at <path>. Try: 照一下` |
+| **Gate 4 Smoke trigger** | 输出 `Skill zhaoyaojing@0.3.0 installed at <path>. Try: 照一下` |
 
 任一闸失败 → **回滚**（只删本次创建的内容） → 把失败闸原文告诉用户 → **绝不假装成功**。
 
@@ -135,7 +135,7 @@
 - **不删** `$TARGET_DIR` 外文件
 - **不在** `$HOME` 或当前 repo 之外写文件，除非用户显式确认
 - **绝不执行** `scripts/` 内任何脚本（那是 skill 运行时内容，不是安装步骤）
-- 平台支持时把 `zhaoyaojing@0.2.0 <iso8601> <path>` 写进 `.installed-skills` 账本备审
+- 平台支持时把 `zhaoyaojing@0.3.0 <iso8601> <path>` 写进 `.installed-skills` 账本备审
 
 ---
 
