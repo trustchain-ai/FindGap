@@ -1,4 +1,103 @@
-## v0.3.0 — 2026-06-01
+## v0.4.0 — 2026-06-02 · Gate · Agent 门禁对齐转身
+
+### 🎯 核心定位转身
+
+**FROM**：「事后评审工具」——照出 gap 给人看
+**TO**：「Agent 执行前的输入质量门禁」——拦截 60% 可预防失败
+
+**数据驱动**：Salesforce 实测显示 prompt 质量优化将 agent 解决率从 40% → 84%；arXiv 研究表明执行前可拦截约 60% agent 失败（任务定义模糊 ~25% + 缺失上下文 ~20% + prompt 结构不当 ~15%）。
+
+### 🚀 重大新增
+
+#### Phase 0 Gate（输入完整度门禁）
+
+在 Phase 1 Detect 之前插入 Phase 0：
+
+- **INVEST-Agent 六要素检查**（Independent/Negotiable/Valuable/Estimable/Small/Testable）
+- **readinessScore 评分**（0-100，阈值 80 放行）
+- **三态 verdict**：PASSED / BLOCKED / WARNING
+- **不可逆操作强制阻断**：G18 critical 不受 readinessScore 影响
+- **自动重评循环**：补齐任一槽位即增量重评，无需手动触发复扫
+
+#### G15-G18 Agent 门禁专属维度
+
+| 新维度 | 检查内容 | 拦截失败模式 |
+|--------|---------|-------------|
+| G15 任务可分解性 | 串联多目标、单轮不可完成 | 编排设计缺陷（~12%）|
+| G16 上下文完整度 | 业务术语/团队惯例/既有系统未定义 | 缺失组织上下文（~20%）|
+| G17 示例充分性 | 强格式约束但零示例 | Prompt 结构不当（~15%）|
+| G18 副作用可逆性 | 不可逆操作无回滚预案 | 不可逆工具调用错误 |
+
+#### 结构化补齐卡片（templates/remediation-card.md）
+
+每个阻断/警告项强制套用四件套模板：缺什么 + 为什么重要 + 怎么补（4 选项）+ 补完后验证。
+
+**核心设计原则**：
+- 给具体选项 ≤4 个，禁止开放追问（红线 3）
+- 量化不补齐风险（agent 成功率预估降低 N%），引用 gap-taxonomy.md 失败根因占比
+- 允许显式跳过但留痕 `[risk-accepted]`
+- 补完后自动重评
+
+#### 机读 JSON 第三通道（templates/gate-output.schema.json）
+
+输出契约从 v0.3 双轨升级为**三轨**：
+- 精简版（口播/汇报，沿用 v0.3）
+- 详细版（落地/复查，沿用 v0.3）
+- **JSON**（机读/CI/agent 消费，v0.4 新增）
+
+JSON Schema 校验确保 verdict 三态、readinessScore 0-100、findings 结构化、remediation 4 选项规范。
+
+#### Gap ID 体系钉死
+
+v0.3 中存在 `G{family}-...` 文档定义 vs `GSEC/GLOGIC/...` 业务域码两套互不兼容的 ID 体系。**v0.4 钉死单一权威**：family 必须取 G1-G18 维度码。同时提供 v0.3→v0.4 ID 迁移映射表，历史 feedback.jsonl 透明转换。
+
+### 🆕 v0.3 残留 P0 缺陷修复
+
+来自 v0.3 自照报告（首条真实 dogfood 数据 R-20260602-001）的 4 个 P0：
+
+| Finding | 修复 |
+|---------|------|
+| G14.S Gap ID 双套体系 | SKILL.md L393-465 统一 + 迁移表 |
+| G14.M 终极目标无可操作口径 | ROADMAP 重写为 5 指标 SMART 版（含 2027-12-31 deadline）|
+| G3 Codex CLI 兼容声明矛盾 | manifest.compatibility 修正为 declared_only + CHANGELOG 注明权威字段 |
+| G7 dogfood 0 条真实数据 | 建立 `dogfood/` 目录 + 001 号真实记录 + JSONL feedback 入仓 |
+
+### 🛑 永久砍掉
+
+| 砍掉项 | 原因 |
+|--------|------|
+| v0.3 业务域码（GSEC/GLOGIC 等） | 与 G1-G18 维度码冲突，唯一权威钉死 |
+| "dogfood 数据回收中"无实证表述 | 已建立 dogfood/runs/ + feedback.jsonl 真实数据 |
+| "默认调用的反身性环节"无量化终极目标 | 替换为 5 指标 + 2027-12-31 deadline |
+| v0.5 原"数据驱动人格"路线 | 翻盘为 "Gate Plus（A2A + CI 集成）"，更贴近终极目标 |
+
+### 🔁 路线翻盘
+
+| v0.3 路线 | v0.4 路线 |
+|----------|-----------|
+| v0.3 → v0.5（数据驱动人格）→ v1.0 | v0.3 → **v0.4 Gate** → v0.5 Gate Plus（A2A+CI）→ v1.0 |
+| 4 阶段流水线 | **5 阶段流水线**（Phase 0 前置门禁 + Phase 1-4 沿用）|
+| 双轨输出 | **三轨输出**（精简 + 详细 + JSON）|
+| G1-G14（46 子项） | **G1-G18（67 检测信号点）**|
+
+### 🔧 工程变更
+
+- 新增 `templates/remediation-card.md`（补齐卡片模板）
+- 新增 `templates/gate-output.schema.json`（JSON schema）
+- 新增 `dogfood/` 目录（README + conventions + runs/ + feedback.jsonl）
+- `references/gap-taxonomy.md`：扩充 G15-G18 共 ~150 行
+- `skill/照妖镜.skill.md`：新增 Phase 0 章节 + ID 体系修正 + 三轨契约升级
+- `manifest.json`：版本号 + gapTypes + phase0Gate + selfCheckItems 全面更新
+- `ROADMAP.md`：v0.4 章节 + 终极目标 SMART 化 + v0.5 翻盘
+- 红线：10 条 → 12 条（v0.3 引入 11/12） → **沿用 12 条**（v0.4 在 ID 格式上做了硬约束但归入红线 8 范畴）
+
+### 真实状态
+
+机制设计完成；待 W3-W4 完成端到端联调；W5-W6 dogfood 20 案例验证退出条件（阻断准确率 ≥80%、成功率提升 ≥25 百分点、误阻断率 ≤15%）。
+
+**项目本身作为首个灰度用户**：每次迭代触发自照，产出真实 dogfood 数据驱动后续版本。
+
+---
 
 ### 🚀 重大升级
 
@@ -110,7 +209,7 @@ v0.2 红线 10 条 → v0.3 红线 12 条：
 
 ### 真实状态
 
-模板与门禁已在 Hermes / Claude Code / Codex CLI 三平台跑通；反馈钩子的离线统计脚本待补。
+模板与门禁已在 Claude Code 平台跑通；Hermes 仅声明级集成未实测；Codex CLI 在 declared_only 状态（manifest.json 权威，本节描述以 manifest 为准）。反馈钩子的离线统计脚本待补。
 
 ---
 

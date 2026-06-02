@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/290963249/zhaoyaojing/templates/gate-output.schema.json",
+  "title": "Zhaoyaojing Gate Output (v0.4)",
+  "description": "Machine-readable output of the zhaoyaojing Phase 0 Gate and full pipeline. Consumed by CI/CD pipelines, agent orchestrators, and pre-execution hooks.",
+  "type": "object",
+  "required": ["schemaVersion", "verdict", "readinessScore", "threshold", "findings", "meta"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "0.4.0",
+      "description": "Schema version, locked to 0.4.0 for v0.4 release"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASSED", "BLOCKED", "WARNING"],
+      "description": "Gate outcome. PASSED = allow agent execution; BLOCKED = stop, remediation required; WARNING = allow with explicit ack and risk-accepted trace"
+    },
+    "readinessScore": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Aggregate input quality score, 0-100. Calculated by SKILL.md Phase 0 Step 0.3"
+    },
+    "threshold": {
+      "type": "integer",
+      "const": 80,
+      "description": "PASSED threshold. readinessScore >= threshold AND no critical AND no G18 irreversible critical => PASSED"
+    },
+    "investAgent": {
+      "type": "object",
+      "description": "INVEST-Agent six-element check results (Phase 0 Step 0.1)",
+      "required": ["I", "N", "V", "E", "S", "T"],
+      "properties": {
+        "I": {"type": "boolean", "description": "Independent: self-contained, no implicit dialog dependency"},
+        "N": {"type": "boolean", "description": "Negotiable: allows agent to propose alternatives"},
+        "V": {"type": "boolean", "description": "Valuable: explicit beneficiary"},
+        "E": {"type": "boolean", "description": "Estimable: complexity assessable, no subjective words"},
+        "S": {"type": "boolean", "description": "Small: completable in single turn"},
+        "T": {"type": "boolean", "description": "Testable: acceptance criteria present"}
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "Full list of detected gaps. Empty when verdict=PASSED with no warnings.",
+      "items": {
+        "type": "object",
+        "required": ["id", "gap", "severity", "blocked", "location", "evidence", "remediation"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^G[0-9]+(\\.[A-Z]|\\.[0-9]+)?-[0-9]+#[a-f0-9]{6}$",
+            "description": "Stable gap id: G{family}-{idx}#{shortHash}. family MUST be a G1-G18 dimension code (e.g. G14.M, G9.2, G16). Business-domain codes (GSEC/GLOGIC/etc.) are forbidden from v0.4 onwards."
+          },
+          "gap": {
+            "type": "string",
+            "pattern": "^G[0-9]+(\\.[A-Z]|\\.[0-9]+)?$",
+            "description": "Gap dimension code (G1-G18 + optional sub-item). See references/gap-taxonomy.md"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["P0", "P1", "P2", "P3", "Drop"],
+            "description": "P0 = blocking, P1 = high risk, P2 = improvement, P3 = informational, Drop = dismissed false positive"
+          },
+          "blocked": {
+            "type": "boolean",
+            "description": "True if this finding contributes to BLOCKED verdict. Only P0 and certain P1 set blocked=true."
+          },
+          "cognitiveLayer": {
+            "type": "string",
+            "enum": ["known-unknown", "unknown-unknown", "known-flawed-preference"],
+            "description": "Cognitive 3-partition layer producing this finding"
+          },
+          "location": {
+            "type": "string",
+            "description": "file:line:col, doc#anchor, task-input:{field}, or dialog-turn-id"
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Minimal reproducible excerpt or verbatim quote from the artifact"
+          },
+          "impact": {
+            "type": "object",
+            "properties": {
+              "agentSuccessRateDelta": {
+                "type": "string",
+                "description": "Estimated impact on agent success rate, e.g. '-40%' or 'N/A'. NEVER fabricate; cite source from gap-taxonomy.md or mark as unknown."
+              },
+              "rootCause": {
+                "type": "string",
+                "description": "Mapped failure root cause from references/gap-taxonomy.md G1-G18"
+              }
+            }
+          },
+          "remediation": {
+            "type": "object",
+            "required": ["type", "options"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["fill_slot", "provide_example", "choose_option", "confirm", "reference_doc"],
+                "description": "Recommended remediation interaction pattern"
+              },
+              "slot": {
+                "type": "string",
+                "description": "Slot name to fill, e.g. 'measurable_target', 'business_term:核销'"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Template with placeholders, e.g. '转化率从___提升到___，统计口径为___'"
+              },
+              "options": {
+                "type": "array",
+                "maxItems": 4,
+                "description": "MAX 4 options (red-line 3). Always include D) skip-with-trace.",
+                "items": {
+                  "type": "object",
+                  "required": ["key", "label"],
+                  "properties": {
+                    "key": {"type": "string", "enum": ["A", "B", "C", "D"]},
+                    "label": {"type": "string"},
+                    "example": {"type": "string"}
+                  }
+                }
+              },
+              "appealHint": {
+                "type": "string",
+                "description": "How user can dismiss as false positive, e.g. 'Reply DROP: <reason>'"
+              }
+            }
+          },
+          "recheckCommand": {
+            "type": "string",
+            "description": "Optional shell command to verify remediation, e.g. 'rg -n \"dedupKey\" src/'"
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "p0": {"type": "integer", "minimum": 0},
+        "p1": {"type": "integer", "minimum": 0},
+        "p2": {"type": "integer", "minimum": 0},
+        "p3": {"type": "integer", "minimum": 0},
+        "drop": {"type": "integer", "minimum": 0}
+      }
+    },
+    "passCondition": {
+      "type": "string",
+      "description": "Human-readable condition to flip verdict to PASSED, e.g. 'Resolve all 2 blocked findings, readinessScore must reach 80'"
+    },
+    "meta": {
+      "type": "object",
+      "required": ["scanId", "artifactType", "timestamp", "skillVersion"],
+      "properties": {
+        "scanId": {
+          "type": "string",
+          "pattern": "^R-[0-9]{8}-[0-9]{3}$",
+          "description": "Scan id, e.g. R-20260602-001"
+        },
+        "artifactType": {
+          "type": "string",
+          "enum": ["task-input", "agent-prompt", "PRD", "tech-spec", "code-pr", "decision", "contract", "dialog", "self-meta"]
+        },
+        "artifactPath": {
+          "type": "string",
+          "description": "Relative path or URL"
+        },
+        "artifactGitSha": {
+          "type": "string",
+          "description": "Git sha of artifact at scan time (when applicable)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC"
+        },
+        "skillVersion": {
+          "type": "string",
+          "const": "0.4.0"
+        },
+        "feedbackPath": {
+          "type": "string",
+          "description": "Path to artifact-scoped feedback.jsonl, e.g. '<artifact-root>/.zhaoyaojing/feedback.jsonl'. Per red-line 8, MUST NOT be global."
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "schemaVersion": "0.4.0",
+      "verdict": "BLOCKED",
+      "readinessScore": 42,
+      "threshold": 80,
+      "investAgent": {"I": true, "N": true, "V": false, "E": false, "S": false, "T": false},
+      "findings": [
+        {
+          "id": "G14.M-1#a3f91c",
+          "gap": "G14.M",
+          "severity": "P0",
+          "blocked": true,
+          "cognitiveLayer": "unknown-unknown",
+          "location": "task-input:objective",
+          "evidence": "提升转化率",
+          "impact": {
+            "agentSuccessRateDelta": "-40%",
+            "rootCause": "任务定义模糊 (~25% agent failures)"
+          },
+          "remediation": {
+            "type": "fill_slot",
+            "slot": "measurable_target",
+            "prompt": "转化率从___提升到___，统计口径为___",
+            "options": [
+              {"key": "A", "label": "直接填写", "example": "从 2.1% 提升到 3.0%（口径：7 日滑动窗口）"},
+              {"key": "B", "label": "指向文档", "example": "参见 docs/okr-2026q3.md"},
+              {"key": "C", "label": "提供示例", "example": "附 1 个达标场景的指标数据"},
+              {"key": "D", "label": "跳过（接受风险）"}
+            ],
+            "appealHint": "Reply DROP: <reason>"
+          },
+          "recheckCommand": "rg -n '转化率' task-input.md"
+        }
+      ],
+      "counts": {"p0": 1, "p1": 0, "p2": 0, "p3": 0, "drop": 0},
+      "passCondition": "Resolve 1 blocked finding; readinessScore must reach 80",
+      "meta": {
+        "scanId": "R-20260602-002",
+        "artifactType": "task-input",
+        "artifactPath": "task-input.md",
+        "timestamp": "2026-06-02T03:14:15Z",
+        "skillVersion": "0.4.0",
+        "feedbackPath": ".zhaoyaojing/feedback.jsonl"
+      }
+    }
+  ]
+}

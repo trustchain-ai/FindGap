@@ -1,13 +1,15 @@
 {
   "slug": "zhaoyaojing",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "displayName": "照妖镜 Mirror Skill",
-  "description": "在用户和 AI 协作的任何节点（评审 PRD / 评 PR / 审方案 / 看对话 / 看决策）识别 gap、推荐最优消除手段、多轮收敛到对齐。当用户说\"照一下\"\"有没有遗漏\"\"我没想到什么\"\"帮我看看这个对不对\"\"这方案靠谱吗\"\"检查盲点\"\"审一下\"或类似需要\"反向审视\"的场景时自动加载。",
+  "description": "Agent 执行前的输入质量门禁 + 评审场景中的 gap 识别与对齐。在用户向 agent 下达任务前（或评审 PRD / PR / 方案 / 决策 / 对话时）自动激活：先在 Phase 0 做输入完整度门禁（readinessScore 0-100，阈值 80 放行），不通过则生成结构化补齐卡片；通过后进入 G1-G18 全量识别、多轮收敛。当用户说\"照一下\"\"有没有遗漏\"\"我没想到什么\"\"开始让 agent 执行\"\"靠谱吗\"\"检查盲点\"\"审一下\"或类似需要\"反向审视 / 执行前对齐\"的场景时自动加载。",
   "triggerPhrases": [
     "/照妖镜",
+    "/照妖镜 --gate",
     "照一下",
     "mirror",
     "审一下",
+    "门禁",
     "有没有遗漏",
     "靠谱吗",
     "我没想到什么",
@@ -25,10 +27,10 @@
   },
   "compatibility": {
     "verified": [
-      "Claude Code",
-      "Hermes"
+      "Claude Code"
     ],
     "experimental": [
+      "Hermes",
       "Cursor (Agent mode)",
       "Cline",
       "Continue",
@@ -38,7 +40,7 @@
       "Codex CLI",
       "OpenAI Responses API"
     ],
-    "note": "只有 verified 列表是实测通过；其他需用户自行验证"
+    "note": "verified=实测全流程跑通；experimental=声明兼容但部分流程需自行验证；declared_only=仅声明接入路径，未端到端验证。v0.3 CHANGELOG 中曾误标 Hermes/Codex 三平台跑通，已于 v0.4 修正——以本字段为权威。"
   },
   "gapTypes": {
     "G1-G8": "v0.1 基础逻辑层（主观锚词/隐含假设/角色心智漂移/未问的关键问题/来源缺失/反例缺失/不可证伪/责任真空）",
@@ -47,7 +49,11 @@
     "G11": "跨域类比 gap（7 子项：金融对账/医疗 Checklist/Poka-Yoke/核电纵深/法律证据链/Pre-mortem/异常监测）",
     "G12": "监管合规 gap（10 子项：DSR/同意/跨境/保留期/泄露通知/未成年/PCI-DSS/自动化决策/审计/许可证）",
     "G13": "认知盲点 gap（8 子项：锚定/确认偏误/规划谬误/邓宁-克鲁格/乐观偏差/沉没成本/现状偏差/知识的诅咒）",
-    "G14": "SMART 双向扫描（5 子项：S/M/A/R/T）"
+    "G14": "SMART 双向扫描（5 子项：S/M/A/R/T）",
+    "G15": "v0.4 新增 · 任务可分解性（Task Decomposability，INVEST-S 落地）",
+    "G16": "v0.4 新增 · 上下文完整度（Context Completeness，业务术语/团队惯例/既有系统）",
+    "G17": "v0.4 新增 · 示例充分性（Example Sufficiency，正例+反例）",
+    "G18": "v0.4 新增 · 副作用可逆性（Side-Effect Reversibility，不可逆操作硬阻断）"
   },
   "cognitiveLayers": [
     "known-unknown（已知的未知）",
@@ -55,23 +61,28 @@
     "known-flawed-preference（已知的偏好-带瑕疵）"
   ],
   "phases": [
-    "Phase 1 Detect (识别)",
-    "Phase 2 Decide (决策)",
-    "Phase 3 Eliminate (消除)",
-    "Phase 4 Converge (收敛，最多 3 轮)",
-    "Output Contract (双轨报告)",
-    "Feedback Hook (gap 唯一 ID)"
+    "Phase 0 Gate (输入门禁, v0.4 新增) — readinessScore + INVEST-Agent + G15-G18 + 三态 verdict + 补齐卡片 + 自动重评",
+    "Phase 1 Detect (识别) — 产物类型 + 认知 3 分法 + G1-G18 全量扫描 + Tier-1/2/3 行业对标",
+    "Phase 2 Decide (决策) — Gap × 手段矩阵",
+    "Phase 3 Eliminate (消除) — ROI 三维评分 + 单 gap 30s 限时",
+    "Phase 4 Converge (收敛) — severity_score + 最多 3 轮",
+    "Output Contract (三轨报告 · v0.4) — 精简版 + 详细版 + JSON",
+    "Feedback Hook (gap 唯一 ID, v0.4 钉死为 G1-G18 维度码)"
   ],
   "redlines": [
     "宁错杀不放过",
     "不依赖记忆抑制 gap",
     "禁止主观词输出",
     "不编造数字",
-    "不超 3 轮"
+    "不超 3 轮",
+    "输出前 5 项自检全过才能外泄（v0.3）",
+    "反馈数据只进离线统计禁止回流在线决策（v0.3）",
+    "ID 格式必须为 G1-G18 维度码禁用业务域码（v0.4）"
   ],
   "doubleTrackTemplate": {
     "summary": "≤200字 / ≤12行 / emoji必现 / 必含下一步行",
-    "detailed": "每条P0/P1含四件套（定位+三法命中+复查命令+误报申诉）"
+    "detailed": "每条P0/P1含四件套（定位+三法命中+复查命令+误报申诉）",
+    "json_v04": "通过 templates/gate-output.schema.json 校验；schemaVersion 0.4.0；verdict 三态；ID 必须 G1-G18 维度码"
   },
   "severityScheme": {
     "P0": {
@@ -100,19 +111,30 @@
       "gate": "关闭"
     }
   },
-  "gapIdFormat": "G{family}-{idx}#{shortHash} | shortHash=sha1(location+evidence)[0:6]",
+  "gapIdFormat": "G{family}-{idx}#{shortHash} | family ∈ G1-G18 子项码（如 G14.M / G9.2 / G16）禁用业务域码 | shortHash=sha1(location+evidence)[0:6]",
   "feedbackHook": {
     "command": "/zhaoyaojing-feedback <id> <accepted|rejected|known|fix-applied> [reason]",
     "rescan": "zhaoyaojing rescan <reportId>",
     "storage": "<artifact-root>/.zhaoyaojing/feedback.jsonl"
   },
   "selfCheckItems": [
-    "C1 双轨齐全",
+    "C1 三轨齐全（精简+详细+JSON · v0.4 起）",
     "C2 严重度词表合规",
     "C3 精简版硬约束",
     "C4 详细版四件套",
-    "C5 可复查性"
+    "C5 可复查性",
+    "C6 JSON 通道 schema 校验通过（v0.4 新）"
   ],
-  "totalSubItems": "G1-G14 共 46 子项",
-  "corePrinciple": "宁错杀不放过"
+  "totalSubItems": "G1-G18 共 67 子项（G1=1, G2=1, G3=1, G4=1, G5=1, G6=1, G7=1, G8=1, G9=8, G10=8, G11=7, G12=10, G13=8, G14=5, G15=1, G16=1, G17=1, G18=1; 加 G14 SMART 5 维 + G15-G18 = 67 检测信号点）",
+  "phase0Gate": {
+    "enabled": true,
+    "scoreFormula": "readinessScore = 100 - sum(severity_weights) - sum(invest_fails)*5",
+    "thresholds": {
+      "PASSED": ">= 80 AND no critical AND no G18 irreversible critical",
+      "WARNING": ">= 60 AND no critical",
+      "BLOCKED": "< 60 OR any critical OR G18 irreversible critical"
+    },
+    "investAgent": ["I", "N", "V", "E", "S", "T"]
+  },
+  "corePrinciple": "宁错杀不放过 + 事前门禁优先于事后评审（v0.4）"
 }

@@ -15,3 +15,7 @@
 DRAFT.md
 .local/
 *.local.md
+
+# Editor backups
+*.bak
+*~

@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Skill](https://img.shields.io/badge/Claude_Code-Skill-blueviolet)](skill/照妖镜.skill.md)
-[![Version](https://img.shields.io/badge/version-v0.3.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v0.4.0-blue)](CHANGELOG.md)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20Cursor%20%7C%20Cline%20%7C%20...-green)](SELF_INSTALL.md)
 
 > 在 Claude Code / Codex / 任意 Agent 与人之间，**识别 gap → 推荐最优消除手段 → 多轮收敛**的 Skill。
@@ -246,15 +246,16 @@ Claude：[检测到关键词，加载照妖镜] [自动开跑]
 
 # 版本规划
 
-当前版本：**v0.3.0** ⭐
+当前版本：**v0.4.0** ⭐
 
 | 版本 | 状态 | 主要内容 | 备注 |
 | --- | --- | --- | --- |
 | v0.1 | 已发布 | 4 阶段流水线（Detect/Decide/Eliminate/Converge）+ G1-G8 共 8 类 gap + 24 项决策矩阵 + 4 类领域 checklist + 6 红线 | 初始可用版本 |
 | v0.2 | 已发布 | G1-G14 共 46 子项 gap + 认知 3 分法独立扫描 + SMART 双向 + 同行业对标 Tier 1-3 + ROI 三维评分 + 平台无关化 + SELF_INSTALL.md + manifest.json + 10 红线 | 召回率目标 85-92% |
-| **v0.3** ⭐ | **已发布（当前）** | 双轨报告模板（精简版 ≤200 字 + 详细版完整证据链）+ 严重度颜色化（🔴P0/🟡P1/🟢P2/⚪P3/🚫Drop）+ Gap 唯一 ID（G{family}-{idx}#{shortHash}）+ 反馈钩子（/zhaoyaojing-feedback）+ 复扫机制 + 5 项输出前自检 + dogfood 10 候选案例 | 路线翻盘 5 段砍成 3 段；evals/独立发现率被判为伪指标 → Drop |
-| v0.5 | 规划中 | 数据驱动人格 + 单平台轻接入（基于 v0.3 真实采纳率数据决定走哪个方向） | 回答"能复制吗？" |
-| v1.0 | 规划中 | 公开 diff + 白皮书 + 协议化（取代 arXiv 论文 / BUSL 许可证）| 回答"能被引用吗？"；终极目标：成为协作工作流的"反身性环节" |
+| v0.3 | 已发布 | 双轨报告模板（精简版 ≤200 字 + 详细版完整证据链）+ 严重度颜色化（🔴P0/🟡P1/🟢P2/⚪P3/🚫Drop）+ Gap 唯一 ID + 反馈钩子 + 复扫机制 + 5 项输出前自检 + 12 红线 | 自照后修复 4 个 P0 缺陷于 v0.4 |
+| **v0.4** ⭐ | **已发布（当前）** | **Gate · Agent 门禁对齐转身** — Phase 0 输入门禁（readinessScore + INVEST-Agent + 三态 verdict）+ G15-G18 四维新增 + 结构化补齐卡片 + 机读 JSON 第三通道 + ID 体系钉死 G1-G18 维度码 + dogfood/ 真实数据目录 + 项目自身作为首个灰度 | 拦截 ~60% agent 可预防失败；20 案例 dogfood 验证退出条件 |
+| v0.5 | 规划中 | Gate Plus：A2A 自主触发协议 + CI/CD 集成 + 单平台轻接入 | 路线翻盘自 v0.3 原计划的"数据驱动人格"，更贴近终极目标 |
+| v1.0 | 规划中 | 公开 diff + 白皮书 + 协议化 | 终极目标：到 2027-12-31，≥3 团队默认启用 + readinessScore≥80 比例≥70% |
 
 详细路线见 [ROADMAP.md](ROADMAP.md)，所有变更见 [CHANGELOG.md](CHANGELOG.md)。
 
