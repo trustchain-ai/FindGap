@@ -25,6 +25,10 @@
 4. **必须在 `examples/` 加 1 个真实 case 证明改动有效**
 5. 提 PR
 
+> **维护者注**：如果 `git push` 在沙箱 / 公司代理 / 受限环境下被 SIGKILL 或挂起，
+> 用 [`scripts/api-push.sh`](scripts/README.md) 走 GitHub Git Data API 推送，
+> 不再多次重试 `git push`。该脚本是 v0.4 发布过程的沉淀产物。
+
 ---
 
 ## PR 标准
