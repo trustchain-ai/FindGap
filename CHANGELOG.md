@@ -1,4 +1,70 @@
-## v0.4.0 — 2026-06-02 · Gate · Agent 门禁对齐转身
+## v0.5.0 — 2026-06-02 · 11 招照妖 · 穷尽 171 → Top 11 · PASS/FAIL 二值转身
+
+### 🔪 核心定位转身
+
+**FROM**（v0.4）：Agent 执行前的输入质量门禁 — Phase 0 引擎 + G1-G18 67 信号 + readinessScore 评分 + 三态 verdict + JSON 三通道 + 补齐卡片
+**TO**（v0.5）：流程交接点的 gap 一招定位器 — 穷尽 171 条根因（10 维度）取 ROI Top 11，语义检查 + grep/模板扫描，**照出原形句**给上游迭代，**PASS 才能进入下一流程**
+
+**驱动数据**（5 轮 workflow + 用户 4 次方向校正，见 `dogfood/runs/003-self-v05-decision.md`）：穷尽 10 维度（认知 C-22 / 协作 P-22 / 需求 R-18 / Agent A-22 / 主观词 S-22 / 视角 V-15 / 信息源 I-14 / 目标 G-14 / 时间 T-13 / 文化 B-10）共 171 条根因 → 三维交集（频率×代价×可拦截）→ **11 条精选**
+
+### 🎯 11 条规则（v0.5 本体）
+
+| # | 代号 | 覆盖用户原话场景 |
+|---|------|---------------|
+| 1 | S-PERF | ✅ "快、高、尽快" — 性能/时效形容词无数字 |
+| 2 | S-QUANT | ✅ "所有、任何、通常" — 全称量词无边界枚举 |
+| 3 | S-NFR | ✅ "稳定、可靠、安全" — 质量形容词无判据 |
+| 4 | R-DOD | 验收标准缺失 — "什么时候算做完" |
+| 5 | G-WHY | WHY 缺失 — Output 冒充 Outcome |
+| 6 | G-NOGO | 多目标冲突 — "又快又便宜"无优先序 |
+| 7 | I-SSOT | SSOT 缺失 — 同物多处定义矛盾 |
+| 8 | I-ADR | ADR 缺失 — trade-off 无决策记录 |
+| 9 | V-NAME | ✅ "鸡同鸭讲" — 同名异义无 glossary |
+| 10 | V-STAKE | ✅ "盲人摸象" — 利益相关方/失败路径缺位 |
+| 11 | V-LAYER | ✅ "对牛弹琴" — 抽象层/颗粒度错配 |
+
+### ✂️ v0.4/v0.3 沉没成本全部砍掉
+
+| 砍掉项 | 版本 | 理由 |
+|--------|------|------|
+| Phase 0 输入门禁引擎 | v0.4 | agent 自判输入，引擎是过度工程 |
+| G1-G18 67 检测信号 | v0.4+v0.2 | 11 条覆盖 80% 返工，其余 v0.6+ |
+| severityScheme（P0-P3 + Drop）| v0.3 | PASS/FAIL 二值即可 |
+| gapIdFormat G{family}-{idx}#{hash} | v0.3 | 用 S-PERF/V-NAME 代号即可 |
+| readinessScore 0-100 + 三态 verdict | v0.4 | 二值就够，分数是虚假精度 |
+| INVEST-Agent + G15-G18 | v0.4 | 归并入 11 条，不发明术语 |
+| gate-output.schema.json + JSON 通道 | v0.4 | agent 结构化读取成本为 0 |
+| remediation-card 四选项卡片 | v0.4 | 列模板=替 agent 干活 |
+| compatibility 三级表 | v0.4 | 单 skill 无兼容矩阵 |
+| selfCheck C1-C6 | v0.3 | 11 条规则本身即 self-check |
+| feedbackHook + rescan 完整机制 | v0.3 | 保留 accept/reject/fixed 三态但大幅简化 |
+| 双轨自检契约 | v0.3 | 5 条红线已替代 |
+| gap-taxonomy.md G1-G14 全表 | v0.2 | 入 11 条决策记录（dogfood/runs/003），不再被引用 |
+
+### 🔧 工程变更
+
+- `skill/照妖镜.skill.md`：774 行 → **236 行**
+- 新增 `examples/`（5 个真实历史命中示例）
+- 新增 `dogfood/runs/003-self-v05-decision.md`（171 → 11 完整决策轨迹）
+- 新增 `dogfood/runs/004-self-v05-grayfirst.md`（首次全仓灰度数据 · 误报率 96.7% → 语义升级）
+- `manifest.json`：全面瘦身（砍 60% 字段，72→41 行`phase0Gate/investAgent/selfCheckItems/severityScheme 全删）
+- REFERENCES: `references/gap-taxonomy.md` 不再被引用（v0.5 已弃用 67 信号分类体系）
+- 红线：12 条 → **5 条**（PASS/FAIL 二值 / 杜绝虚假 / 不超 11 条 / 不依赖记忆 / 不替 agent 干活）
+
+### 首次自我灰度结果
+
+> `dogfood/runs/004-self-v05-grayfirst.md` 全仓扫描：
+
+- **纯 grep 规则误报率 96.7%**（S-PERF/S-QUANT/S-NFR 因规则表自身包含示例词 → 回环命中）
+- **修复**：3 条主观词规则从纯 grep 升级为 **LLM 语义判断**（判断"模糊使用"vs"描述/示例/引用"）
+- 模板类规则（G-WHY/ V-STAKE）精准度 > grep 类——发现 CHANGELOG v0.4 段 Output 冒充 Outcome 真阳
+- **数据驱动原则验证**：灰度暴露的实现问题（grep 回环）在当次迭代即修正——不等到下一版本
+
+### 真实状态
+
+SKILL.md 重写完成，236 行 / 11 条规则。首次灰度跑通 → 3 条 grep 规则升级为语义检查。v0.5 作为"11 招照妖"可用，等待下一个真实下游协作产物验证。
+
+
 
 ### 🎯 核心定位转身
 

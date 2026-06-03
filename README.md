@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Skill](https://img.shields.io/badge/Claude_Code-Skill-blueviolet)](skill/照妖镜.skill.md)
-[![Version](https://img.shields.io/badge/version-v0.4.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v0.5.0-blue)](CHANGELOG.md)
 [![Platforms](https://img.shields.io/badge/platforms-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20Cursor%20%7C%20Cline%20%7C%20...-green)](SELF_INSTALL.md)
 
 > 在 Claude Code / Codex / 任意 Agent 与人之间，**识别 gap → 推荐最优消除手段 → 多轮收敛**的 Skill。
@@ -246,18 +246,14 @@ Claude：[检测到关键词，加载照妖镜] [自动开跑]
 
 # 版本规划
 
-当前版本：**v0.4.0** ⭐
+当前版本：**v0.5.0** ⭐
 
-| 版本 | 状态 | 主要内容 | 备注 |
-| --- | --- | --- | --- |
-| v0.1 | 已发布 | 4 阶段流水线（Detect/Decide/Eliminate/Converge）+ G1-G8 共 8 类 gap + 24 项决策矩阵 + 4 类领域 checklist + 6 红线 | 初始可用版本 |
-| v0.2 | 已发布 | G1-G14 共 46 子项 gap + 认知 3 分法独立扫描 + SMART 双向 + 同行业对标 Tier 1-3 + ROI 三维评分 + 平台无关化 + SELF_INSTALL.md + manifest.json + 10 红线 | 召回率目标 85-92% |
-| v0.3 | 已发布 | 双轨报告模板（精简版 ≤200 字 + 详细版完整证据链）+ 严重度颜色化（🔴P0/🟡P1/🟢P2/⚪P3/🚫Drop）+ Gap 唯一 ID + 反馈钩子 + 复扫机制 + 5 项输出前自检 + 12 红线 | 自照后修复 4 个 P0 缺陷于 v0.4 |
-| **v0.4** ⭐ | **已发布（当前）** | **Gate · Agent 门禁对齐转身** — Phase 0 输入门禁（readinessScore + INVEST-Agent + 三态 verdict）+ G15-G18 四维新增 + 结构化补齐卡片 + 机读 JSON 第三通道 + ID 体系钉死 G1-G18 维度码 + dogfood/ 真实数据目录 + 项目自身作为首个灰度 | 拦截 ~60% agent 可预防失败；20 案例 dogfood 验证退出条件 |
-| v0.5 | 规划中 | Gate Plus：A2A 自主触发协议 + CI/CD 集成 + 单平台轻接入 | 路线翻盘自 v0.3 原计划的"数据驱动人格"，更贴近终极目标 |
-| v1.0 | 规划中 | 公开 diff + 白皮书 + 协议化 | 终极目标：到 2027-12-31，≥3 团队默认启用 + readinessScore≥80 比例≥70% |
-
-详细路线见 [ROADMAP.md](ROADMAP.md)，所有变更见 [CHANGELOG.md](CHANGELOG.md)。
+| 版本 | 状态 | 主要内容 |
+| --- | --- | --- |
+| v0.1-v0.4 | 已发布 | v0.1-v0.4 历史版本 → 详见 CHANGELOG.md |
+| **v0.5** ⭐ | **已发布（当前）** | **11 招照妖** — 穷尽 171 条 Gap 根因取 ROI Top 11，PASS/FAIL 二值，照出原形句给上游迭代 |
+| v0.6 | 规划中 | 外部灰度：首个真实外部用户反馈校准 11 条规则 |
+| v1.0 | 规划中 | 白皮书 + 行业对标 + 11 条规则冻结 |
 
 ---
 
