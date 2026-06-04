@@ -19,3 +19,6 @@ DRAFT.md
 # Editor backups
 *.bak
 *~
+
+# MCP config (contains API keys)
+.mcp.json

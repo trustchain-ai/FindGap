@@ -1,6 +1,8 @@
 # Example · R-DOD · 验收标准（DoD）缺失
 
-> **来源**：本仓真实历史命中。本案例来自 v0.3 ROADMAP.md "dogfood 数据回收中" 表述自照（dogfood/runs/001-self-v03-bootstrap.md Finding #4，G7 不可证伪）。
+> **来源**：本仓真实历史命中（v0.4 时期，使用当时的 PASS/FAIL 方法论）。
+> 原案例来自 dogfood/runs/001-self-v03-bootstrap.md Finding #4。
+> v0.6 已砍掉 PASS/FAIL，输出格式改为三节点（照→查→亮）。下方保留历史原貌。
 
 ---
 

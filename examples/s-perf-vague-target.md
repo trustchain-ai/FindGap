@@ -1,8 +1,8 @@
 # Example · S-PERF · 性能/时效形容词无指标
 
-> **来源**：本仓真实历史命中。本案例来自照妖镜自己 v0.4 时期的 ROADMAP.md 终极目标自照（dogfood/runs/001-self-v03-bootstrap.md Finding #2）。
->
-> 杜绝虚构：所有原文、行号、修复都可在 git history 查到。
+> **来源**：本仓真实历史命中（v0.4 时期，使用当时的 PASS/FAIL 方法论）。
+> 原案例来自 dogfood/runs/001-self-v03-bootstrap.md Finding #2。
+> v0.6 已砍掉 PASS/FAIL，输出格式改为三节点（照→查→亮）。下方保留历史原貌。
 
 ---
 

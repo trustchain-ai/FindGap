@@ -1,0 +1,44 @@
+name: 规则误报 / 漏报
+description: 某条照妖镜规则命中了不该命中的内容，或该命中却没命中
+labels: [bug]
+body:
+  - type: textarea
+    id: prompt
+    attributes:
+      label: 被照的 prompt 原文
+      description: 你输入给 AI 的原始 prompt
+      placeholder: |
+        比如：把搜索改快点
+    validations:
+      required: true
+  - type: textarea
+    id: mirror-output
+    attributes:
+      label: 照妖镜输出的内容
+      description: 把三节点（照→查→亮）的完整输出贴过来
+    validations:
+      required: true
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: 问题类型
+      options:
+        - 误报（不该命中但命中了）
+        - 漏报（该命中但没命中）
+        - WebSearch 来源不准确
+        - URL 失效或 404
+        - 其他
+    validations:
+      required: true
+  - type: input
+    id: expected
+    attributes:
+      label: 你期望的判定
+      description: 你认为正确的结果应该是什么？
+      placeholder: 比如：S-PERF 不该命中，因为 prompt 上下文里已经给了 P99 < 200ms 的数字
+  - type: input
+    id: model
+    attributes:
+      label: 使用的 AI 模型
+      description: Claude / GPT / Gemini / 其他
+      placeholder: Claude Opus 4.7

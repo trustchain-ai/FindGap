@@ -1,6 +1,8 @@
 # Example · I-SSOT · SSOT 缺失 / 术语漂移
 
-> **来源**：本仓真实历史命中。本案例来自照妖镜 v0.3 的 Gap ID 体系自相矛盾问题（dogfood/runs/001-self-v03-bootstrap.md Finding #1，G14.S）。
+> **来源**：本仓真实历史命中（v0.4 时期，使用当时的 Gap ID + PASS/FAIL 方法论）。
+> 原案例来自 dogfood/runs/001-self-v03-bootstrap.md Finding #1。
+> v0.6 已砍掉 ID 体系和 PASS/FAIL，输出格式改为三节点（照→查→亮）。下方保留历史原貌。
 
 ---
 

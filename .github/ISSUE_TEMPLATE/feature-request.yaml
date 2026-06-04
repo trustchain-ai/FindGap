@@ -1,0 +1,28 @@
+name: 新招 / 改进建议
+description: 建议新增照妖镜规则或改进现有规则
+labels: [enhancement]
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: 场景描述
+      description: 描述一个当前 11 招覆盖不到的真实场景
+      placeholder: |
+        比如：我在写 prompt 时经常遇到 XX 问题，当前 11 招照不出来
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: 真实 prompt 示例
+      description: 给 1-2 个真实 prompt 示例，包含照妖镜输出
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 你的改进建议
+      description: 你觉得应该新增哪招？现有的哪招怎么改？
+  - type: input
+    id: model
+    attributes:
+      label: 使用的 AI 模型
+      placeholder: Claude Opus 4.7

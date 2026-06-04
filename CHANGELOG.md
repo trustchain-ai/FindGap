@@ -1,3 +1,31 @@
+## v0.7.1 — 2026-06-04 · 20 条真实闭环基线 + README 收口 + v0.8 顺序校准
+
+### 基线达标
+
+- `dogfood/runs/005-024` 共 20 条真实 `/照` 闭环跑满
+- `dogfood/baseline.md` 产出：总命中 154、TP 151、FP 3、overall precision 0.9805
+- 高杠杆规则收敛：`R-DOD`、`V-STAKE`、`V-NAME`、`I-SSOT`、`I-ADR`、`G-NOGO`
+- 低精度规则锁定：先调 `V-LAYER`，后调 `G-WHY`
+
+### README 收口
+
+- README 首屏前置 20-run baseline 的高光结论
+- 增加中英锚点切换，默认中文
+- 将宣传表述收敛为“首轮 20 条 baseline”，避免过度外推
+- 链接 `dogfood/baseline.md` 作为公开证据入口
+
+### v0.8 顺序校准
+
+**FROM**：先强化高 ROI 规则，再做外灰
+
+**TO**：先校准测量（独立判定 / rewrite adoption / recall proxy / 样本分层），再做外部灰度，最后强化高 ROI 规则
+
+### 结论
+
+v0.7 已证明“整体已准”；v0.8 不再平均用力，而是走 **测量校准优先 + 外灰验证 + 高杠杆规则增强**。
+
+---
+
 ## v0.6.0 — 2026-06-03 · 三节点 · 零落盘 · 大道至简
 
 ### 范式转身

@@ -1,28 +1,35 @@
-# CHECKPOINT · v0.6
+# CHECKPOINT · v0.7
 
-## P1 · 砍死代码 + 修 manifest
+## v0.6 完成状态
 
-36 文件 → 24 文件。manifest.json JSON PASS。✅
+三节点（照→查→亮）· 零落盘 · 11 招 · 安装版已同步。✅
 
-## P2 · 三文件落地
+## v0.7 · 20 次真实闭环 · 建立精度基线
 
-| 文件 | 行数 | 状态 |
-|------|------|------|
-| README.md | 42 行 | ✅ |
-| SKILL.md | 98 行 | ✅ |
-| manifest.json | 21 行 · JSON PASS | ✅ |
+| 交付物 | 状态 |
+|--------|------|
+| 判定协议 `dogfood/protocol.md` | ✅ 已完成 |
+| 20 条真实 `/照` 记录 | ✅ 20/20 |
+| 基线报告 `dogfood/baseline.md` | ✅ 已产出 |
+| ROADMAP 回填（v0.8/v1.0 退出条件） | ✅ 已基于真实样本回填 v0.8 绝对目标 |
 
-## P3 · 自照闭环
+## 本轮变更（2026-06-04）
 
-节点 ① 照：13 处 grep → 语义判断后 0 真命中（vs 004 纯 grep 96.7% 误报）
-节点 ② 查：3 次 WebSearch，2 源印证（Meilisearch P99 22ms + Google SRE Book）
-节点 ③ 亮：完整输出，链接真实、孤证标注、局限性标注
+1. 已从钉钉需求列表拉取真实 PRD 并完成 20 条 `/照` 闭环（`dogfood/runs/005-024`）
+2. 样本覆盖继续扩大：支付认证、币种接入、静态码归属、拒付映射、错误码整合、设备指纹、账单字段、渠道包统一、终端时间、支付方式矩阵、关单机制、自动退款/修单、二维码对客 API 等
+3. 高频模式已稳定：I-SSOT / V-NAME / R-DOD / V-STAKE 为最密集命中组
+4. 宣传包 spec 与 implementation plan 已落地，后续可按计划执行 README 与长文
 
-三节点闭环 PASS。
+---
 
-## P4 · 审查 · 待确认
+## 当前高频模式（20 条样本）
 
-4 处修完（manifest entrypoint / CHANGELOG 数字 / ROADMAP 退出条件 / CHECKPOINT 落盘）。
+- **I-SSOT**：单一真源最密集——字段、主键、路由、时间语义、支付状态经常被多个系统共同定义
+- **V-NAME**：术语表缺失反复出现——checkout / S2S / failed / refund / capture / settlement 等词跨团队不同义
+- **R-DOD**：完成定义持续不足——字段级、场景级、历史兼容、灰度/回滚/监控口径常未验收化
+- **V-STAKE**：失败路径与受影响方缺位——超时、晚到回调、空值、迁移、客服/财务对账等边界常未闭环
+- **I-ADR**：阈值与方案选择经常直接给结论，没有 why-not
+- **G-NOGO / S-QUANT**：阶段边界与排除项经常缺失，范围容易膨胀
 
 ---
 

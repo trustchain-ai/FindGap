@@ -1,66 +1,54 @@
-# 验证：照妖镜 Skill 安装 + 触发测试
+# 验证：照妖镜 v0.6 安装 + 三节点闭环测试
 
 ## 1. 安装验证
 
 ```bash
-ls -la ~/.claude/skills/照妖镜.skill.md
-# 应该输出文件存在，约 12KB
+head -6 ~/.claude/skills/zhaoyaojing/SKILL.md | grep version
+# 应输出：version: "0.6.0"
+
+ls ~/.claude/skills/zhaoyaojing/
+# 应只有 SKILL.md，无 references/ 无 benchmarks/
 ```
 
-## 2. 触发验证（3 种方式）
+## 2. 触发验证
 
-### 方式 1：显式调用
-打开 Claude Code，输入：
+输入：
 ```
-/照妖镜 帮我看下这个 PRD：
-"我们需要做一个性能好、用户体验友好的支付系统。"
+/照 把搜索改快点
 ```
 
-**预期**：Claude 自动加载照妖镜 Skill，按 4 阶段输出报告。
+## 3. 三节点输出验证
 
-### 方式 2：关键词触发
-```
-这个方案靠谱吗：
-"用 Redis 做分布式锁，确保订单不重复。"
-```
+Claude 输出**必须包含**：
 
-**预期**：Skill 因关键词"靠谱吗"触发。
+- [ ] 节点 ① 照：11 招逐条扫描，命中项列出代号 + 原形句
+- [ ] 节点 ② 查：每条命中做 ≥ 3 次 WebSearch，保留 ≥ 2 条互相印证的来源
+- [ ] 节点 ③ 亮：固定格式输出 `🪞 {代号} · "{原形句}"` + 真实 URL
 
-### 方式 3：审视类问题
-```
-帮我审一下这段代码有没有遗漏：
-function pay(amount) { return api.charge(amount); }
-```
+## 4. 红线验证
 
-**预期**：Skill 因"审一下""遗漏"触发。
+输出**不得**包含：
 
-## 3. 输出验证
+- [ ] ❌ 评分/分级/severity（不给 P0-P3、不给分数）
+- [ ] ❌ 改写建议/替用户决策（镜子只反射）
+- [ ] ❌ PASS/FAIL 判定
+- [ ] ❌ 4 阶段流水线（Detect/Decide/Eliminate/Converge）
+- [ ] ❌ 静态数据引用（benchmarks/、references/）
 
-每个触发场景，Claude 输出**必须包含**：
+## 5. 失败信号
 
-- [ ] Phase 1: Detect 识别表格（含命中位置 + 命中证据）
-- [ ] Phase 2: Decide 决策表（每个 gap 对应一个推荐手段）
-- [ ] Phase 3: Eliminate 消除执行（带具体产出）
-- [ ] Phase 4: Converge 收敛判定 + 最终报告
+- ❌ Claude 按 4 阶段输出 → 安装的是旧版本，需重新同步
+- ❌ 输出含 severity_score 或 P0/P1 标记 → 加载了 v0.3
+- ❌ 无 WebSearch 调用、无真实 URL → 节点 ② 查未执行
+- ❌ 给了改写建议或"下一步" → 违反红线 4
 
-**失败信号**：
-- ❌ Claude 直接给修改建议，没走 4 阶段 → Skill 未加载
-- ❌ 只列 gap 但没给"命中证据" → Skill 未严格执行
-- ❌ 让你"在 5 个手段里选一个" → Skill 红线违反
-
-## 4. 调试
-
-如果 Skill 没自动加载：
+## 6. 调试
 
 ```bash
-# 检查文件存在
-ls ~/.claude/skills/照妖镜.skill.md
+# 检查版本
+head -6 ~/.claude/skills/zhaoyaojing/SKILL.md | grep version
 
-# 检查 frontmatter 格式
-head -5 ~/.claude/skills/照妖镜.skill.md
-# 应该看到 ---\nname: 照妖镜\ndescription: ...\n---
-
-# 在 Claude Code 中显式列出可用 skills
-/skills
-# 或重启 Claude Code 让它重新扫描 skills 目录
+# 确认无残留旧文件
+ls ~/.claude/skills/zhaoyaojing/references/ 2>/dev/null && echo "旧文件残留！" || echo "OK"
+ls ~/.claude/skills/zhaoyaojing/benchmarks/ 2>/dev/null && echo "旧文件残留！" || echo "OK"
 ```

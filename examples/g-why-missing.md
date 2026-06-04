@@ -1,6 +1,8 @@
 # Example · G-WHY · WHY 缺失 / Output 冒充 Outcome
 
-> **来源**：本仓真实历史命中。本案例来自 v0.4 CHANGELOG.md "Phase 0 输入门禁" 章节自照（dogfood/runs/002-self-v04-bootstrap.md Finding #1，G15 任务可分解性）。
+> **来源**：本仓真实历史命中（v0.5 时期，使用当时的 PASS/FAIL 方法论）。
+> 原案例来自 dogfood/runs/002-self-v04-bootstrap.md Finding #1。
+> v0.6 已砍掉 PASS/FAIL，输出格式改为三节点（照→查→亮）。下方保留历史原貌。
 
 ---
 
