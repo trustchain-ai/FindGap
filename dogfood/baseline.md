@@ -6,6 +6,15 @@
 >
 > 当前稳定可得：命中、TP、FP、precision。总 TPR 因缺“应检出总数”分母，暂不回算。
 
+## control 边界
+
+本报告是 **within-project、author-in-the-loop labeling** 的内部 control：
+
+- 判定者主要是 prompt 作者本人
+- 样本高度集中于支付 / PRD / 技术方案类文本
+- 结果可用于建立 **precision baseline**
+- 结果**不可直接外推**为 recall、external validity 或因果效果
+
 ## 分规则结果
 
 | 规则 | 命中 | TP | FP | precision | 覆盖率 |
@@ -33,7 +42,14 @@
 | overall precision | 0.9805 |
 | overall FP share | 1.9481% |
 
-## 高杠杆优先级
+## 计数口径提醒
+
+- 多 hit prompt 允许同一条 run 命中多条规则
+- `overall precision` 按 **perHit** 计算，不按 perRun
+- “高 ROI 规则”当前基于 **频次 × precision × 下游严重度** 的内部判断
+- 进入 v0.8 后，需改为 **matched-strata** 下比较，避免被样本分布绑架
+
+## 高杠杆优先级（当前 control 内）
 
 1. **R-DOD** — 20/20，precision 1.0000  
    最强共性问题。直接决定“是否可验收”。
@@ -65,13 +81,23 @@
 3. 术语、事实源、决策理由经常一起缺：`V-NAME` 19/20、`I-SSOT` 18/20、`I-ADR` 16/20。
 4. 当前主要缺的不是原始细节数量，而是结构化表达：名字、权威来源、决策理由、完成定义不到位时，后续细节都不稳。
 5. 量化缺口常见但 ROI 次于 DoD / stakes：`S-QUANT` 14/20 值得保留，但优先级应低于高频高杠杆规则。
-6. 检测器整体已可用：11 条规则里 9 条 precision = 1.0000。v0.8 应做“高杠杆增强 + 低精度定点调优”，不是全面重训。
+6. 检测器整体已可用：11 条规则里 9 条 precision = 1.0000。v0.8 应做“测量校准优先 + 高杠杆增强 + 低精度定点调优”，不是全面重训。
 7. 低精度调优顺序：先 `V-LAYER`，后 `G-WHY`。
+
+## matched-strata 比较要求（v0.8）
+
+v0.8 起，所有“更好了没有”的比较都必须在 matched-strata 下进行：
+
+- 同类 promptType 比同类 promptType
+- E1 与 E2 不混池
+- correctness 和 usefulness signals 分栏，不得交叉替代
+- adoption / rewrite / disagreement 只作 usefulness signals，不作 detector quality 证据
 
 ## 结论
 
-v0.7 证明的不是“整体还不准”，而是：
+v0.7 证明的不是”整体还不准”，而是：
 
 - **整体已准**：154 命中里 151 个 TP，overall precision = 0.9805
-- **重点未聚焦**：真正该优先做的是高杠杆规则增强，而不是平均用力微调
-- **v0.8 应转向**：从“泛调精度”切到“高 ROI 问题强化 + 低精度规则定点收窄”
+- **测量校准优先**：当前 precision 已高，但判定者主要是 prompt 作者本人、样本集中于支付/PRD 类、recall 无分母——v0.8 的第一优先级是校准测量体系（独立判定、样本分层、coverage proxy），而不是直接强化规则
+- **高杠杆规则增强是第二步**：在测量校准站得住之后，再针对 R-DOD / V-STAKE / V-NAME / I-SSOT / I-ADR / G-NOGO 做修复引导增强
+- **低精度规则定点收窄是第三步**：先 `V-LAYER`，后 `G-WHY`

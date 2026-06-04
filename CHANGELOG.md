@@ -1,3 +1,31 @@
+## v0.8.0 — 2026-06-04 · 测量校准优先 · 分层外灰 · 弱规则窄调
+
+### 核心转向
+
+**FROM**：先强化高 ROI 规则，再做外灰
+**TO**：先校准测量（独立判定 / usefulness signals / coverage proxy / 样本分层），再做外部灰度，最后强化高 ROI 规则
+
+### 协议与统计升级
+
+- `dogfood/protocol.md` 升级到 v0.8：加入 E1 / E2、judgmentStage、metricDenominator、usefulness signals、coverage proxy
+- `dogfood/conventions.md`：加入最小必填键与 v0.8 frontmatter 要求
+- `dogfood/stats.md`：correctness / usefulness 分栏，按 strata 展示
+- `dogfood/baseline.md`：明确 20-run control 边界与 matched-strata 比较口径
+
+### 规则级变更
+
+- `V-LAYER` 收窄：只在**同一决策点**跨 Why / What / How 多层但未声明当前权威层时命中
+- `G-WHY` 增加 suppression：若 stakes / DoD / priority 已足够解释目标，则不触发
+- 为 `G-WHY / V-STAKE / G-NOGO / R-DOD` 补 taxonomy boundary，减少相邻规则重复命中
+
+### 验证与叙事收口
+
+- `tests/verify-skill.md` 拆为行为验证 + 流程检查
+- README 收敛为“首轮 20 条 precision baseline”，不再过度外推
+- ROADMAP v0.8 改为 measurement-first 顺序
+
+---
+
 ## v0.7.1 — 2026-06-04 · 20 条真实闭环基线 + README 收口 + v0.8 顺序校准
 
 ### 基线达标
