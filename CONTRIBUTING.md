@@ -1,6 +1,6 @@
 # 贡献指南
 
-FindGap 是一份 **Skill 文件**，不是一个代码工程。贡献门槛极低——能改 Markdown 就能贡献。
+FindGap 是一份 **Skill 文件**，不是一个代码工程。当前品牌名已切到 FindGap；为兼容历史安装路径，skill 文件名仍保留为 `skill/照妖镜.skill.md`。贡献门槛极低——能改 Markdown 就能贡献。
 
 ---
 

@@ -12,7 +12,7 @@
   ],
   "entrypoint": "skill/照妖镜.skill.md",
   "license": "MIT",
-  "homepage": "https://github.com/290963249/zhaoyaojing",
+  "homepage": "https://github.com/290963249/FindGap",
   "redlines": [
     "三节点（扫→查→出）— 多一步就是多余",
     "优化方案给方向不给结论 — 不替用户做最终选择",
