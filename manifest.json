@@ -1,9 +1,11 @@
 {
   "slug": "zhaoyaojing",
-  "version": "0.6.0",
-  "displayName": "照妖镜",
-  "description": "在你按 Enter 把 prompt 发给 AI 之前，按 11 招照一下。每处含混现查行业真实数据——不落盘、不编造、不评分。大道至简，三节点。",
+  "version": "0.9.0",
+  "displayName": "FindGap",
+  "description": "在你按 Enter 之前，从下游视角找出会导致返工的 gap，给出优化方案和决策依据。有行业数据用行业数据，没有就基于上下文推理兜底。",
   "triggerPhrases": [
+    "/findgap",
+    "/fg",
     "/照",
     "/照妖镜",
     "照一下"
@@ -12,10 +14,10 @@
   "license": "MIT",
   "homepage": "https://github.com/290963249/zhaoyaojing",
   "redlines": [
-    "三节点（照→查→亮）— 多一步就是妖",
-    "不评分不审问不补全 — 镜子只反射",
-    "不落盘任何静态数据 — 行业基准每次现查",
+    "三节点（扫→查→出）— 多一步就是多余",
+    "优化方案给方向不给结论 — 不替用户做最终选择",
+    "不落盘任何静态数据 — 行业数据每次现查",
     "URL 必须真实可点击 — 编造一次信用归零"
   ],
-  "corePrinciple": "大道至简 · 三节点 · 零落盘 · 让 AI 严格一次 (v0.6)"
+  "corePrinciple": "下游视角 · 找 gap · 给优化方案 · 三层证据兜底 (v0.9)"
 }

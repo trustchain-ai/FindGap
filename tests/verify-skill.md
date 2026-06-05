@@ -1,102 +1,69 @@
-# 验证：照妖镜 v0.8 行为验证 + 流程检查
+# 验证：FindGap v0.9 行为验证 + 流程检查
 
 ## A. Skill 行为验证
 
-### 1. 安装验证
+### 1. 触发验证
 
-```bash
-head -6 ~/.claude/skills/zhaoyaojing/SKILL.md | grep version
-# 应输出：version: "0.8.0"
-```
-
-### 2. 触发验证
-
-输入：
 ```text
-/照 做一个支持先买后付的结账能力，性能要好，体验要流畅，上线尽快
+/findgap 做一个支持先买后付的结账能力，性能要好，体验要流畅，上线尽快
+/fg review this PRD
+/照 这个任务描述
 ```
 
-### 3. 输出行为验证
+### 2. 输出行为验证
 
-Claude 输出**必须包含**：
+FindGap 输出**必须包含**：
 
-- [ ] 节点 ① 照：11 招逐条扫描，命中项列出代号 + 原形句
-- [ ] 节点 ② 查：每条命中做 ≥ 3 次 WebSearch，保留 ≥ 2 条互相印证的来源；若不足则标“无可信公开数据”
-- [ ] 节点 ③ 亮：双段输出（决策卡 + 其余发现）
-- [ ] urgency 前缀：🔴 / 🟠 / 🟡
+- [ ] 头部：`FindGap · 发现 N 处 gap 可能导致返工`
+- [ ] 每条 gap 有严重度 emoji（🔴/🟠/🟡）+ 用人话说的 gap 名
+- [ ] 每条 gap 有 `原文：` 引用文档原始句子
+- [ ] 每条 gap 有 `缺口：` 直述缺什么、会怎么卡
+- [ ] 🔴 和 🟠 必须有 `优化方案：` 含决策依据
+- [ ] 每条 gap 有 `参考依据：` 含可点击 URL 或 ⚠️ 兜底推理
 
-### 4. 边界验证（v0.8）
-
-#### 4.1 V-LAYER 收窄验证
-输入：
-```text
-/照 先把这次改动的业务目标写清楚，再落到字段设计
-```
-
-预期：
-- 不因单纯同时出现 Why / How 词就误报
-- 只有在**同一决策点**层级冲突且未声明当前权威层时才命中 `V-LAYER`
-
-#### 4.2 G-WHY suppression 验证
-输入：
-```text
-/照 这个改动要在本周完成，因为如果继续拖，客服会继续手工处理退款，影响商户体验；完成标准是退款时延降到 1 天内
-```
-
-预期：
-- 因为受影响对象、stakes、DoD 已给出，`G-WHY` 不应轻易触发
-
-#### 4.3 相邻规则边界验证
-输入：
-```text
-/照 做一个退款能力，优先解决重复支付，失败时要自动原路退；上线标准是 3 个场景联调通过
-```
-
-预期：
-- `G-WHY` / `V-STAKE` / `G-NOGO` / `R-DOD` 各自命中时，理由必须对应不同问题
-- 不得一处缺口被 4 条规则重复命中成同义句
-
-### 5. 红线验证
+### 3. 禁止项验证
 
 输出**不得**包含：
 
-- [ ] ❌ 评分 / 分级 / severity
-- [ ] ❌ 改写建议 / 替用户决策
-- [ ] ❌ PASS / FAIL 判定
-- [ ] ❌ 静态锚点库 / 静态 benchmark 冒充现查
+- [ ] ❌ 规则代号（S-PERF、V-NAME、R-DOD 等）
+- [ ] ❌ 多角色视角映射（角色 A / 角色 B / 碰撞点）
+- [ ] ❌ PASS / FAIL
+- [ ] ❌ 评分 / 分级 / 排名
+- [ ] ❌ 替用户改写文档
+- [ ] ❌ 搜不到数据就只写"无可信公开数据"不给兜底
 
-## B. 流程 / 运营检查
+### 4. 三层证据验证
 
-> 这部分不是自动行为验证，而是对 v0.8 记录与灰度流程的检查。
+- [ ] Tier 1：有 ≥2 条可点击 URL 互证
+- [ ] Tier 2：搜不到时有 `⚠️ 基于文档现状与领域常识推理：` + 推理内容
+- [ ] Tier 3：极端情况有 `⚠️ 当前信息不足，需人工补充判断`
 
-### 1. 记录 schema 检查
+### 5. 兼容触发验证
 
-抽查一条 v0.8 记录，必须能看到：
+- [ ] `/findgap` 能触发
+- [ ] `/fg` 能触发
+- [ ] `/照` 能触发
+- [ ] `/照妖镜` 能触发
 
-- [ ] `strata`
-- [ ] `promptType`
-- [ ] `raterRole`
-- [ ] `isIndependentOfAuthor`
-- [ ] `judgmentStage`
-- [ ] `metricDenominator`
-- [ ] `fieldCompleteness`
+## B. 流程检查
 
-### 2. correctness / usefulness 分栏检查
+### 1. 版本验证
 
-统计页必须分开展示：
+```bash
+grep version skill/照妖镜.skill.md | head -1
+# 应输出：version: "0.9.0"
+```
 
-- [ ] correctness（TP / FP / precision）
-- [ ] usefulness signals（isAdopted / isPromptRewritten / didReduceDisagreement）
+### 2. 品牌验证
 
-### 3. miss review 分段检查
+```bash
+grep -c 'FindGap' README.md
+# 应 >= 5
+```
 
-- [ ] `suspectedMissCountUnaided` 单列
-- [ ] `suspectedMissCountAided` 单列
-- [ ] 禁止合并成单一 recall 值
+### 3. 规则代号泄露检查
 
-### 4. 失败信号
-
-- ❌ README 或 ROADMAP 把 external gray 写成 external validity
-- ❌ 把 adoption / rewrite 当成 detector quality 证据
-- ❌ `V-LAYER` 仍然因为任何 Why / How 同段共现就误报
-- ❌ `G-WHY` 在 stakes / DoD 已足够解释目标时仍频繁误报
+```bash
+rg 'S-PERF|S-QUANT|S-NFR|R-DOD|G-WHY|G-NOGO|I-SSOT|I-ADR|V-NAME|V-STAKE|V-LAYER' README.md
+# 应无匹配
+```
