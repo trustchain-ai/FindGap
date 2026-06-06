@@ -12,7 +12,7 @@
   ],
   "entrypoint": "skill/FindGap.skill.md",
   "license": "MIT",
-  "homepage": "https://github.com/290963249/FindGap",
+  "homepage": "https://github.com/trustchain-ai/FindGap",
   "redlines": [
     "三节点（扫→查→出）— 多一步就是多余",
     "优化方案给方向不给结论 — 不替用户做最终选择",
