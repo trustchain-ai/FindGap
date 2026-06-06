@@ -2,18 +2,32 @@
 
 **简体中文** | **English**
 
-> **按 Enter 之前，先找 gap。**
+> **在你按 Enter 之前，先找 gap。**
 > **Find the gaps before you hit Enter.**
 >
-> FindGap 从下游视角扫描你的文档，找出会导致返工的 gap，给出优化方案和决策依据。
-> FindGap scans your document from the downstream perspective, surfaces gaps that cause rework, and provides optimization suggestions with decision references.
->
-> 当前基于首轮 [20-run baseline](dogfood/baseline.md)。有行业数据就用行业数据，没有就基于上下文推理兜底——不编造、不停在"没数据"。
-> Grounded in the first [20-run baseline](dogfood/baseline.md). Uses industry data when available; falls back to context-based reasoning when not — never fabricates, never stops at "no data found."
+> FindGap 从下游视角扫描你准备发给 AI 的内容，找出会导致返工的 gap，给出优化方案和决策依据。
+> FindGap scans what you're about to send to AI, surfaces gaps that cause rework, and provides optimization suggestions with decision references.
 
 <p align="center">
   <a href="LICENSE">MIT</a> · <a href="dogfood/baseline.md">Baseline</a> · <a href="CONTRIBUTING.md">Contribute</a>
 </p>
+
+---
+
+## Find* — 让不可信变得可见 / Make the untrustworthy visible
+
+FindGap 是 Find* 系列的第一站，守护 AI 协作的「事前」环节：
+FindGap is the first node in the Find* series, guarding the "before" phase of AI collaboration:
+
+| | FindGap | FindAction | FindMiss |
+|---|---|---|---|
+| **时机** / When | 发出前 / Before sending | 执行中 / During execution | 交付后 / After delivery |
+| **检查什么** / What | 你的输入 / Your input | Agent 的过程 / Agent's process | Agent 的输出 / Agent's output |
+| **一句话** / One-liner | 你没说清楚的 / What you didn't clarify | 它正在做的 / What it's doing | 它没做到的 / What it missed |
+| **触发** / Trigger | `/fg` | `/fa` | `/fm` |
+
+> 当前仓库只包含 FindGap。FindAction 和 FindMiss 即将独立发布。
+> This repo contains FindGap only. FindAction and FindMiss coming soon.
 
 ---
 
@@ -31,6 +45,11 @@
 
 **结论：** 大多数返工不是因为不会写，而是默认大家读成同一个意思。
 **Takeaway:** most rework is not bad writing but assuming everyone reads the same words the same way.
+
+基于首轮 [20-run baseline](dogfood/baseline.md)（precision 0.9805）。
+Grounded in the first [20-run baseline](dogfood/baseline.md) (precision 0.9805).
+
+---
 
 ## 现在就试 / Try it now
 
@@ -51,8 +70,10 @@ Or copy `skill/FindGap.skill.md` into your skills directory.
 **适合：** 你准备让 AI 帮你构建、设计、评审、决策之前。
 **Use when:** about to ask AI to build, design, review, or decide.
 
-**不适合：** 闲聊、调试已定位的具体报错。
-**Skip when:** casual chat or isolated debugging.
+**不适合：** 闲聊、调试具体报错、检查 AI 已交付的输出（→ FindMiss）。
+**Skip when:** casual chat, isolated debugging, or checking AI's delivered output (→ FindMiss).
+
+---
 
 ## FindGap 输出长什么样 / What the output looks like
 
@@ -94,6 +115,8 @@ FindGap · 发现 2 处 gap 可能导致返工
   市场；如果首站已确定，应直接锁定对应 BNPL 形态
 ```
 
+---
+
 ## 它怎么工作 / How it works
 
 11 条内部规则扫 gap → 联网查行业数据 → 搜不到时基于上下文推理兜底 → 给出优化方案。
@@ -104,24 +127,18 @@ FindGap · 发现 2 处 gap 可能导致返工
 - 不替你做最终决策 / Does not make the final decision for you
 - 优化方案给方向，附决策依据 / Suggestions give direction with decision references
 
-## FAQ
-
-**这和"写更好的文档"有什么区别？/ How is this different from "write better docs"?**
-不是给抽象建议，而是指出具体 gap + 给出优化方案 + 附行业数据或上下文推理作为决策依据。
-Not vague advice — it points out specific gaps, provides optimization suggestions, and backs them with industry data or context-based reasoning.
-
-**为什么是 skill？/ Why a skill?**
-直接在 AI agent 里工作，不用切产品。
-Works inside your AI agent — no product switching.
+---
 
 ## Roadmap
 
 - **v0.7** — 20-run baseline ✅
 - **v0.8** — 测量校准 + 规则边界收窄 ✅
-- **v0.9** — FindGap 品牌 + 优化方案 + 三层证据兜底 🔄
+- **v0.9** — FindGap 品牌 + 优化方案 + 三层证据兜底 ✅
 - **v1.0** — 跨模型验证 + 规则冻结
 
 详见 / See [ROADMAP.md](ROADMAP.md)
+
+---
 
 ## Contribute
 
