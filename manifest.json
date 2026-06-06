@@ -10,7 +10,7 @@
     "/照妖镜",
     "照一下"
   ],
-  "entrypoint": "skill/照妖镜.skill.md",
+  "entrypoint": "skill/FindGap.skill.md",
   "license": "MIT",
   "homepage": "https://github.com/290963249/FindGap",
   "redlines": [

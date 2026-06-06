@@ -18,7 +18,7 @@
 
 ### 文件变更
 
-- `skill/照妖镜.skill.md`：全面重写输出模板、红线、三层证据
+- `skill/FindGap.skill.md`：全面重写输出模板、红线、三层证据
 - `README.md`：FindGap 品牌、新示例、镜像双语
 - `manifest.json`：名称、触发词、版本、红线更新
 - `tests/verify-skill.md`：新验证项

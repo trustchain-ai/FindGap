@@ -50,7 +50,7 @@ FindGap 输出**必须包含**：
 ### 1. 版本验证
 
 ```bash
-grep version skill/照妖镜.skill.md | head -1
+grep version skill/FindGap.skill.md | head -1
 # 应输出：version: "0.9.0"
 ```
 

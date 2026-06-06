@@ -39,8 +39,8 @@
 > 帮我装上 github.com/290963249/FindGap 的 FindGap skill
 > Install the FindGap skill from github.com/290963249/FindGap
 
-或手动复制 `skill/照妖镜.skill.md` 到 skills 目录。
-Or copy `skill/照妖镜.skill.md` into your skills directory.
+或手动复制 `skill/FindGap.skill.md` 到 skills 目录。
+Or copy `skill/FindGap.skill.md` into your skills directory.
 
 ```text
 /findgap 把搜索API的P99延迟降到50ms以内
@@ -128,8 +128,8 @@ Works inside your AI agent — no product switching.
 FindGap 抓到了真 gap，或漏掉了？→ [Discussions](https://github.com/290963249/FindGap/discussions)
 Caught a real gap, or missed one? → [Discussions](https://github.com/290963249/FindGap/discussions)
 
-改规则或加案例 → `skill/照妖镜.skill.md` 或 `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
-Edit rules or add cases → `skill/照妖镜.skill.md` or `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
+改规则或加案例 → `skill/FindGap.skill.md` 或 `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
+Edit rules or add cases → `skill/FindGap.skill.md` or `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
