@@ -55,8 +55,8 @@ Grounded in the first [20-run baseline](dogfood/baseline.md) (precision 0.9805).
 
 告诉你的 AI agent / Tell your AI agent:
 
-> 帮我装上 github.com/290963249/FindGap 的 FindGap skill
-> Install the FindGap skill from github.com/290963249/FindGap
+> 帮我装上 github.com/trustchain-ai/FindGap 的 FindGap skill
+> Install the FindGap skill from github.com/trustchain-ai/FindGap
 
 或手动复制 `skill/FindGap.skill.md` 到 skills 目录。
 Or copy `skill/FindGap.skill.md` into your skills directory.
@@ -142,12 +142,12 @@ FindGap · 发现 2 处 gap 可能导致返工
 
 ## Contribute
 
-FindGap 抓到了真 gap，或漏掉了？→ [Discussions](https://github.com/290963249/FindGap/discussions)
-Caught a real gap, or missed one? → [Discussions](https://github.com/290963249/FindGap/discussions)
+FindGap 抓到了真 gap，或漏掉了？→ [Discussions](https://github.com/trustchain-ai/FindGap/discussions)
+Caught a real gap, or missed one? → [Discussions](https://github.com/trustchain-ai/FindGap/discussions)
 
 改规则或加案例 → `skill/FindGap.skill.md` 或 `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
 Edit rules or add cases → `skill/FindGap.skill.md` or `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
-MIT · [GitHub](https://github.com/290963249/FindGap) · v0.9
+MIT · [GitHub](https://github.com/trustchain-ai/FindGap) · v0.9
