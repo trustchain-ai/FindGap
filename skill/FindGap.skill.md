@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "0.9.0"
   package: zhaoyaojing
-  source: https://github.com/290963249/FindGap
+  source: https://github.com/trustchain-ai/FindGap
 ---
 
 # FindGap · v0.9 · 下游视角找 gap + 优化方案 + 三层证据兜底
