@@ -1,113 +1,105 @@
 # FindGap
 
-> **交接前最后一道认知校对。**
->
-> FindGap helps you catch the expensive gaps that usually surface only **after** an artifact has already been handed to the next person or agent.
+> **交接前最后一道认知校对。**  
+> Catch the expensive gaps before handoff — not after.
+
+当产出物所有者认为内容已经没有明显问题、准备交给下一个人或 agent 时，FindGap 帮你识别那些**仍未被看见、但会在下游引发高成本返工**的关键 gap。
 
 <p align="center">
-  <a href="LICENSE">MIT</a> · <a href="dogfood/baseline.md">Baseline</a> · <a href="CONTRIBUTING.md">Contribute</a>
+  <a href="LICENSE">MIT</a> · <a href="dogfood/baseline.md">Baseline</a> · <a href="CONTRIBUTING.md">Contribute</a> · <a href="ROADMAP.md">Roadmap</a>
 </p>
 
 ---
 
-## What it is
+## 它是什么 · What it is
 
-FindGap is a **handoff-time gap checker**.
+FindGap 是一个**交接点 Gap 校对器**。
 
-It is for the moment when the current owner already believes the artifact is good enough, and is about to hand it to the next person or the next agent. At that moment, FindGap helps expose the still-unseen gaps that are cheap to ignore now and expensive to fix later.
+它不是每轮对话前的提示词检查器，也不替你改写文档。它只在一个时刻介入：**你觉得产物已经差不多了，准备交出去的那一刻**。这时最容易带着隐藏缺口进入下游，FindGap 就是拦这个时刻的。
 
-**It is not:**
-- a per-turn prompt checker
-- a generic writing improver
-- a PASS / FAIL scorer
-- a tool that rewrites the artifact for you
+FindGap is a **handoff-time gap checker**. It intervenes at the moment when the current owner already believes the artifact is good enough and is about to hand it off. It is not a per-turn prompt checker, not a writing improver, and not a PASS/FAIL scorer.
 
 ---
 
-## Who it is for
+## 适合谁 · Who it is for
 
-FindGap is most useful for people who frequently hand work across a workflow boundary:
-
-- **Product / solution owners** — before handing a PRD, proposal, or task package to engineering
-- **Engineers / architects** — before handing a spec, interface contract, or implementation plan to the next builder or reviewer
-- **Agent-workflow users** — before passing an artifact to the next agent in a multi-step workflow
-
----
-
-## Why it matters
-
-Most costly rework does **not** come from "bad writing."
-It comes from hidden assumptions that survive until handoff:
-
-- acceptance criteria were never locked
-- failure paths were never made explicit
-- key terms meant different things to different people
-- constraints and dependencies were assumed, not stated
-
-By the time these issues are discovered downstream, the team is no longer fixing wording — it is fixing **wasted execution**.
+| 角色 | 使用场景 |
+|------|---------|
+| **产品 / 方案 Owner** | 把 PRD、需求、任务包交给工程前 |
+| **工程 / 架构师** | 把技术方案、接口契约、实施计划交给下一个 builder 前 |
+| **Agent 工作流用户** | 把产出物交给下一个 agent 前 |
 
 ---
 
-## Evidence you can trust
+## 为什么重要 · Why it matters
 
-FindGap is grounded in real dogfooding, not generic advice.
+大多数高成本返工，**不是因为写得差**，而是因为隐含假设在交接时没有暴露：
 
-- **20 real handoff-style prompts** were used to establish the first baseline
-- Overall measured **precision = 0.9805**
-- The highest-cost gaps repeatedly clustered around:
-  - completion / acceptance
-  - boundary / failure path
-  - terminology / definition
-  - method / constraints / dependencies
+- 验收标准从未锁定
+- 失败路径从未显式化
+- 关键术语在不同角色之间含义不同
+- 约束和依赖被默认，没有被声明
 
-In plain language: most of the gaps FindGap flagged in the baseline were real rework risks, not noisy suggestions.
-
-See the underlying data in [`dogfood/baseline.md`](dogfood/baseline.md).
+等下游发现时，修的已经不是措辞，而是**白做的执行**。
 
 ---
 
-## Handoff workflow at a glance
+## 可信的证据 · Evidence you can trust
+
+FindGap 基于真实 dogfood 验证，不是泛泛建议。
+
+| 指标 | 数据 |
+|------|------|
+| 真实样本 | 20 轮 handoff 场景提示词 |
+| 整体精度 | **precision = 0.9805** |
+| 高频 gap 类型 | 完成/验收、边界/失败路径、术语/定义、方法/约束/依赖 |
+
+通俗地说：FindGap 标记出的 gap，绝大多数是真实的返工风险，而不是噪音。
+
+详细数据见 [`dogfood/baseline.md`](dogfood/baseline.md)。
+
+---
+
+## 交接流程一览 · Handoff workflow
+
+<!-- GitHub.com 原生渲染 Mermaid，其他客户端可能显示为代码 -->
 
 ```mermaid
 flowchart LR
-    A[Owner thinks<br/>"this is ready"] --> B{Run FindGap}
-    B --> C[Self-check<br/>owner reviews hidden assumptions]
-    B --> D[Receiver-check<br/>next person checks execution blockers]
-    C --> E[Clarify acceptance / terms / boundaries]
+    A["Owner 认为<br/>准备好了"] --> B{"运行 FindGap"}
+    B --> C["Self-check<br/>所有者自检隐藏假设"]
+    B --> D["Receiver-check<br/>接头人检查执行阻塞"]
+    C --> E["澄清验收 / 术语 / 边界"]
     D --> E
-    E --> F[Handoff with shared understanding]
-    F --> G[Less downstream rework]
+    E --> F["带着共识交接"]
+    F --> G["减少下游返工"]
 ```
 
-FindGap is not designed to interrupt every interaction. It is designed to intervene at the **handoff point**, where hidden ambiguity becomes expensive.
+**FindGap 不在每轮交互中打断你。它只在交接点介入——正是隐藏缺口最容易被忽略、代价最高的时刻。**
 
 ---
 
-## Two modes
+## 双模式 · Two modes
 
-### Self-check
+### Self-check（所有者自检）
 
-Use this when **you are the current owner** and want one last review before handoff.
+交接前 owner 做最后一次自检。帮你识别：
+- 哪些默认前提只存在于自己脑中
+- 哪些地方自己以为说清了，但下游未必这么理解
+- 哪些 gap 已经超出自己当前认知范围
 
-Self-check helps surface:
-- assumptions that only exist in your head
-- places where you think the artifact is clear but the next person may read it differently
-- gaps that have already moved outside your awareness, so you would no longer think to ask for improvement
+### Receiver-check（接头人他检）
 
-### Receiver-check
-
-Use this when **you are the next person or next agent** about to take over the artifact.
-
-Receiver-check helps surface:
-- what blocks execution if you start cold
-- where you would be forced to fill in the blanks yourself
-- what is likely to turn into downstream rework during implementation, integration, or acceptance
+接手前 receiver 做他检。帮你识别：
+- 如果现在开工，会卡在哪些信息缺口上
+- 哪些地方会迫使自己默认补脑
+- 哪些 gap 会在执行、联调、验收中放大成返工
 
 ---
 
-## See it in action
+## 看看效果 · See it in action
 
-### Input artifact
+**输入产物：**
 
 ```text
 支持 BNPL 结账能力。
@@ -115,7 +107,7 @@ Receiver-check helps surface:
 上线尽快。
 ```
 
-### What FindGap exposes
+**FindGap 识别的交接缺口：**
 
 ```text
 FindGap · 所有者自检 · 发现 2 处 gap 可能导致返工
@@ -136,14 +128,13 @@ FindGap · 所有者自检 · 发现 2 处 gap 可能导致返工
 下游风险：下游可能按不同理解推进，导致接口或流程返工。
 ```
 
-The point is not to generate more text.
-The point is to catch the hidden gaps **before the next person starts building on the wrong understanding**.
+**重点不是生成更多文字，而是在下一个人带着错误理解开始做之前，把隐藏缺口拦下来。**
 
 ---
 
-## Quickstart
+## 快速开始 · Quickstart
 
-Load FindGap into your agent environment, then run it at the handoff moment.
+在你的 agent 环境中加载 FindGap，然后在交接时刻运行：
 
 ```text
 /findgap 这是准备交给下一个 agent 的支付接入方案，先帮我做 self-check
@@ -151,56 +142,56 @@ Load FindGap into your agent environment, then run it at the handoff moment.
 /照 在 handoff 前看看这段技术方案还有哪些高成本 gap
 ```
 
-You can also manually copy `skill/FindGap.skill.md` into your skills directory.
+也可以手动复制 `skill/FindGap.skill.md` 到你的 skills 目录。
 
-**Best use cases:**
-- before handing a plan to another engineer
-- before passing a task to another agent
-- before asking someone else to implement, review, or accept an artifact
+**适合用的场景：**
+- 把方案交给另一个工程师之前
+- 把任务交给另一个 agent 之前
+- 请别人帮你实施、评审或验收一份产物之前
 
-**Skip it for:**
-- casual conversation
-- normal coding without a handoff artifact
-- checking an already-delivered output
-
----
-
-## How it works
-
-1. **Scan** the artifact with the internal rule set to find likely handoff gaps
-2. **Check evidence** using public references when available, and contextual reasoning when not
-3. **Show the gaps** in a fixed flat-list format with anchor text, missing information, downstream risk, and fill-in direction
-
-Core principles:
-- three-node flow only — scan, check, show
-- never invent URLs or evidence
-- no runtime static knowledge base
-- direction, not decisions
+**不适合的场景：**
+- 闲聊
+- 不涉及交接的普通编码
+- 检查 AI 已交付的输出（那是 FindMiss 的事）
 
 ---
 
-## Docs
+## 工作原理 · How it works
 
-For deeper material, see:
+1. **扫描**：用内部 11 条规则集扫描产出物，找出可能的交接缺口
+2. **校验依据**：有公开参考数据时用数据，没有时用上下文推理，信息不足时显式标注
+3. **展示缺口**：固定结构展示原文锚点、缺失信息、下游风险、依据类型和补齐方向
 
-| Doc | Content |
-|-----|---------|
-| [`docs/user-manual.md`](docs/user-manual.md) | Software-style usage guide |
-| [`docs/architecture.md`](docs/architecture.md) | Engine, CLI, and eval pipeline |
-| [`docs/originality.md`](docs/originality.md) | Originality and dependency notes |
-| [`dogfood/baseline.md`](dogfood/baseline.md) | Baseline evidence (20 runs) |
-| [`ROADMAP.md`](ROADMAP.md) | Version history and direction |
+核心原则：
+- 三步流程，不多一步
+- 不编造 URL 和证据
+- 不维护运行时静态知识库
+- 给方向，不替你做决策
 
 ---
 
-## Contribute
+## 文档 · Docs
 
-Caught a real gap, or found one that FindGap missed?
+README 是门面，不是手册。深度内容请看：
 
-- Skill contract: `skill/FindGap.skill.md`
-- Verification: `tests/verify-skill.md`
-- Dogfood evidence: `dogfood/`
-- Guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+| 文档 | 内容 |
+|------|------|
+| [`docs/user-manual.md`](docs/user-manual.md) | 软件说明书 |
+| [`docs/architecture.md`](docs/architecture.md) | 系统架构与模块管线 |
+| [`docs/originality.md`](docs/originality.md) | 原创性与依赖声明 |
+| [`dogfood/baseline.md`](dogfood/baseline.md) | 基线证据（20 轮验证） |
+| [`ROADMAP.md`](ROADMAP.md) | 版本历史与方向 |
+
+---
+
+## 贡献 · Contribute
+
+发现了真实的 gap，或者 FindGap 漏掉了？欢迎参与改进：
+
+- 行为契约：`skill/FindGap.skill.md`
+- 验证清单：`tests/verify-skill.md`
+- Dogfood 证据：`dogfood/`
+- 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 ---
 
