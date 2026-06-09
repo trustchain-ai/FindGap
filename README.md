@@ -1,12 +1,8 @@
 # FindGap
 
-**简体中文** | **English**
-
-> **在你按 Enter 之前，先找 gap。**
-> **Find the gaps before you hit Enter.**
+> **交接前最后一道认知校对。**
 >
-> FindGap 从下游视角扫描你准备发给 AI 的内容，找出会导致返工的 gap，给出优化方案和决策依据。
-> FindGap scans what you're about to send to AI, surfaces gaps that cause rework, and provides optimization suggestions with decision references.
+> FindGap helps you catch the expensive gaps that usually surface only **after** an artifact has already been handed to the next person or agent.
 
 <p align="center">
   <a href="LICENSE">MIT</a> · <a href="dogfood/baseline.md">Baseline</a> · <a href="CONTRIBUTING.md">Contribute</a>
@@ -14,140 +10,198 @@
 
 ---
 
-## Find* — 让不可信变得可见 / Make the untrustworthy visible
+## What it is
 
-FindGap 是 Find* 系列的第一站，守护 AI 协作的「事前」环节：
-FindGap is the first node in the Find* series, guarding the "before" phase of AI collaboration:
+FindGap is a **handoff-time gap checker**.
 
-| | FindGap | FindAction | FindMiss |
-|---|---|---|---|
-| **时机** / When | 发出前 / Before sending | 执行中 / During execution | 交付后 / After delivery |
-| **检查什么** / What | 你的输入 / Your input | Agent 的过程 / Agent's process | Agent 的输出 / Agent's output |
-| **一句话** / One-liner | 你没说清楚的 / What you didn't clarify | 它正在做的 / What it's doing | 它没做到的 / What it missed |
-| **触发** / Trigger | `/fg` | `/fa` | `/fm` |
+It is for the moment when the current owner already believes the artifact is good enough, and is about to hand it to the next person or the next agent. At that moment, FindGap helps expose the still-unseen gaps that are cheap to ignore now and expensive to fix later.
 
-> 当前仓库只包含 FindGap。FindAction 和 FindMiss 即将独立发布。
-> This repo contains FindGap only. FindAction and FindMiss coming soon.
+**It is not:**
+- a per-turn prompt checker
+- a generic writing improver
+- a PASS / FAIL scorer
+- a tool that rewrites the artifact for you
 
 ---
 
-## 先看证据 / Evidence first
+## Who it is for
 
-20 次真实扫描，最高频的 gap 不是模型弱，是需求没说清：
-20 real scans — the top gaps were request ambiguity, not model weakness:
+FindGap is most useful for people who frequently hand work across a workflow boundary:
 
-| Gap | 说明 / Description |
-|-----|---------------------|
-| 验收标准缺失 | 说了做什么，没说做到什么算完成 / says what to build, not what counts as done |
-| 失败路径隐身 | 只写了正常流程，异常场景缺位 / happy path only, no failure handling |
-| 关键术语未对齐 | 同名异义，团队各自理解不同 / same term, different meanings |
-| 单一真源缺失 | 同一对象在多处各自定义 / no single source of truth |
-
-**结论：** 大多数返工不是因为不会写，而是默认大家读成同一个意思。
-**Takeaway:** most rework is not bad writing but assuming everyone reads the same words the same way.
-
-基于首轮 [20-run baseline](dogfood/baseline.md)（precision 0.9805）。
-Grounded in the first [20-run baseline](dogfood/baseline.md) (precision 0.9805).
+- **Product / solution owners** — before handing a PRD, proposal, or task package to engineering
+- **Engineers / architects** — before handing a spec, interface contract, or implementation plan to the next builder or reviewer
+- **Agent-workflow users** — before passing an artifact to the next agent in a multi-step workflow
 
 ---
 
-## 现在就试 / Try it now
+## Why it matters
 
-告诉你的 AI agent / Tell your AI agent:
+Most costly rework does **not** come from "bad writing."
+It comes from hidden assumptions that survive until handoff:
 
-> 帮我装上 github.com/trustchain-ai/FindGap 的 FindGap skill
-> Install the FindGap skill from github.com/trustchain-ai/FindGap
+- acceptance criteria were never locked
+- failure paths were never made explicit
+- key terms meant different things to different people
+- constraints and dependencies were assumed, not stated
 
-或手动复制 `skill/FindGap.skill.md` 到 skills 目录。
-Or copy `skill/FindGap.skill.md` into your skills directory.
+By the time these issues are discovered downstream, the team is no longer fixing wording — it is fixing **wasted execution**.
+
+---
+
+## Evidence you can trust
+
+FindGap is grounded in real dogfooding, not generic advice.
+
+- **20 real handoff-style prompts** were used to establish the first baseline
+- Overall measured **precision = 0.9805**
+- The highest-cost gaps repeatedly clustered around:
+  - completion / acceptance
+  - boundary / failure path
+  - terminology / definition
+  - method / constraints / dependencies
+
+In plain language: most of the gaps FindGap flagged in the baseline were real rework risks, not noisy suggestions.
+
+See the underlying data in [`dogfood/baseline.md`](dogfood/baseline.md).
+
+---
+
+## Handoff workflow at a glance
+
+```mermaid
+flowchart LR
+    A[Owner thinks<br/>"this is ready"] --> B{Run FindGap}
+    B --> C[Self-check<br/>owner reviews hidden assumptions]
+    B --> D[Receiver-check<br/>next person checks execution blockers]
+    C --> E[Clarify acceptance / terms / boundaries]
+    D --> E
+    E --> F[Handoff with shared understanding]
+    F --> G[Less downstream rework]
+```
+
+FindGap is not designed to interrupt every interaction. It is designed to intervene at the **handoff point**, where hidden ambiguity becomes expensive.
+
+---
+
+## Two modes
+
+### Self-check
+
+Use this when **you are the current owner** and want one last review before handoff.
+
+Self-check helps surface:
+- assumptions that only exist in your head
+- places where you think the artifact is clear but the next person may read it differently
+- gaps that have already moved outside your awareness, so you would no longer think to ask for improvement
+
+### Receiver-check
+
+Use this when **you are the next person or next agent** about to take over the artifact.
+
+Receiver-check helps surface:
+- what blocks execution if you start cold
+- where you would be forced to fill in the blanks yourself
+- what is likely to turn into downstream rework during implementation, integration, or acceptance
+
+---
+
+## See it in action
+
+### Input artifact
 
 ```text
-/findgap 把搜索API的P99延迟降到50ms以内
-/fg 做一个支持10万并发的实时消息系统
-/照 review this PRD
+支持 BNPL 结账能力。
+范围：先做印尼。
+上线尽快。
 ```
 
-**适合：** 你准备让 AI 帮你构建、设计、评审、决策之前。
-**Use when:** about to ask AI to build, design, review, or decide.
+### What FindGap exposes
 
-**不适合：** 闲聊、调试具体报错、检查 AI 已交付的输出（→ FindMiss）。
-**Skip when:** casual chat, isolated debugging, or checking AI's delivered output (→ FindMiss).
-
----
-
-## FindGap 输出长什么样 / What the output looks like
-
-```
-FindGap · 发现 2 处 gap 可能导致返工
+```text
+FindGap · 所有者自检 · 发现 2 处 gap 可能导致返工
+> If I hand this off now, what will the next person misunderstand?
 
 ---
 
-🔴 致命 · 性能指标缺失
-
-原文："性能要好，体验要流畅"
-
-缺口："好"和"流畅"没有量化指标。开发做技术选型时，无法判断
-延迟应控制在 300ms 还是 3s。
-
-优化方案：补充一个可量化的延迟指标（如 P99 上限）。行业常见
-做法是用 P99 而非平均值，因为平均值会掩盖长尾延迟。
-
-参考依据：
-- Visa 线上授权 SLO: P99 < 500ms
-  — https://developer.visa.com/capabilities/visa-direct
+🔴 completion-acceptance-gap
+原文："支持 BNPL 结账能力。"
+缺口：缺少可观察的完成定义或验收标准。
+下游风险：下游会在不同完成标准下继续推进，导致返工。
 
 ---
 
-🟠 阻塞 · 关键术语未对齐
-
-原文："支持 BNPL（先买后付）"
-
-缺口："BNPL"在不同市场指代不同产品形态。架构师和风控如果
-各自理解不同，接口设计会出现字段冲突。
-
-优化方案：增加 BNPL 定义段，明确分期数范围、免息期规则、
-风控主体归属。
-
-参考依据：
-- Klarna (欧洲): 4 期免息，平台承担风控
-  — https://www.klarna.com/international/business
-- ⚠️ 基于文档现状推理：文档写的是"海外 POS"但未指定首站
-  市场；如果首站已确定，应直接锁定对应 BNPL 形态
+🟠 terminology-definition-gap
+原文："支持 BNPL 结账能力。"
+缺口：关键术语未定义，存在同名异义风险。
+下游风险：下游可能按不同理解推进，导致接口或流程返工。
 ```
 
----
-
-## 它怎么工作 / How it works
-
-11 条内部规则扫 gap → 联网查行业数据 → 搜不到时基于上下文推理兜底 → 给出优化方案。
-11 internal rules scan for gaps → search for industry data → fall back to context reasoning when needed → provide optimization suggestions.
-
-- 不展示规则代号，用人话直说 gap / No rule codes — gaps stated in plain language
-- 不替你改写文档 / Does not rewrite your document
-- 不替你做最终决策 / Does not make the final decision for you
-- 优化方案给方向，附决策依据 / Suggestions give direction with decision references
+The point is not to generate more text.
+The point is to catch the hidden gaps **before the next person starts building on the wrong understanding**.
 
 ---
 
-## Roadmap
+## Quickstart
 
-- **v0.7** — 20-run baseline ✅
-- **v0.8** — 测量校准 + 规则边界收窄 ✅
-- **v0.9** — FindGap 品牌 + 优化方案 + 三层证据兜底 ✅
-- **v1.0** — 跨模型验证 + 规则冻结
+Load FindGap into your agent environment, then run it at the handoff moment.
 
-详见 / See [ROADMAP.md](ROADMAP.md)
+```text
+/findgap 这是准备交给下一个 agent 的支付接入方案，先帮我做 self-check
+/fg 我准备把这份 PRD 交给实现同学，做一下 receiver-check
+/照 在 handoff 前看看这段技术方案还有哪些高成本 gap
+```
+
+You can also manually copy `skill/FindGap.skill.md` into your skills directory.
+
+**Best use cases:**
+- before handing a plan to another engineer
+- before passing a task to another agent
+- before asking someone else to implement, review, or accept an artifact
+
+**Skip it for:**
+- casual conversation
+- normal coding without a handoff artifact
+- checking an already-delivered output
+
+---
+
+## How it works
+
+1. **Scan** the artifact with the internal rule set to find likely handoff gaps
+2. **Check evidence** using public references when available, and contextual reasoning when not
+3. **Show the gaps** in a fixed flat-list format with anchor text, missing information, downstream risk, and fill-in direction
+
+Core principles:
+- three-node flow only — scan, check, show
+- never invent URLs or evidence
+- no runtime static knowledge base
+- direction, not decisions
+
+---
+
+## Docs
+
+For deeper material, see:
+
+| Doc | Content |
+|-----|---------|
+| [`docs/user-manual.md`](docs/user-manual.md) | Software-style usage guide |
+| [`docs/architecture.md`](docs/architecture.md) | Engine, CLI, and eval pipeline |
+| [`docs/originality.md`](docs/originality.md) | Originality and dependency notes |
+| [`dogfood/baseline.md`](dogfood/baseline.md) | Baseline evidence (20 runs) |
+| [`ROADMAP.md`](ROADMAP.md) | Version history and direction |
 
 ---
 
 ## Contribute
 
-FindGap 抓到了真 gap，或漏掉了？→ [Discussions](https://github.com/trustchain-ai/FindGap/discussions)
-Caught a real gap, or missed one? → [Discussions](https://github.com/trustchain-ai/FindGap/discussions)
+Caught a real gap, or found one that FindGap missed?
 
-改规则或加案例 → `skill/FindGap.skill.md` 或 `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
-Edit rules or add cases → `skill/FindGap.skill.md` or `examples/` → [CONTRIBUTING.md](CONTRIBUTING.md)
+- Skill contract: `skill/FindGap.skill.md`
+- Verification: `tests/verify-skill.md`
+- Dogfood evidence: `dogfood/`
+- Guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 ---
 
-MIT · [GitHub](https://github.com/trustchain-ai/FindGap) · v0.9
+MIT · [GitHub](https://github.com/trustchain-ai/FindGap) · v1.0.0

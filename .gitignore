@@ -11,6 +11,12 @@
 # Logs
 *.log
 
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
 # Local notes (not for public)
 DRAFT.md
 .local/
@@ -19,6 +25,9 @@ DRAFT.md
 # Editor backups
 *.bak
 *~
+
+# Local worktrees
+.worktrees/
 
 # MCP config (contains API keys)
 .mcp.json

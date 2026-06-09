@@ -1,26 +1,46 @@
 ---
 name: FindGap
-description: 在你按 Enter 之前，用 FindGap 找出会导致返工的 gap。扫描你准备发给 AI 的需求/方案/意图，每处含混现查行业真实数据，搜不到时基于上下文推理兜底——不落盘、不编造、不替你做最终决策。当用户说"/findgap""/fg""/照""/照妖镜""照一下"时加载。Do NOT use for 普通写代码、闲聊、检查 AI 已交付的输出（那是 FindMiss 的事）。
+description: 在把产出物交给下一个人或 agent 前，用 FindGap 做 handoff-time gap 校对。它支持 owner 的 Self-check 和 receiver 的 Receiver-check，优先识别那些当前看不见、但会在下游引发高成本返工的 gap，并用证据或上下文推理帮助减少返工、最大化 ROI。当用户说"/findgap""/fg""/照""/照妖镜""照一下"时加载。Do NOT use for 普通写代码、闲聊、检查 AI 已交付的输出（那是 FindMiss 的事）。
 license: MIT
 metadata:
-  version: "0.9.0"
+  version: "1.0.0"
   package: zhaoyaojing
   source: https://github.com/trustchain-ai/FindGap
 ---
 
-# FindGap · v0.9 · 下游视角找 gap + 优化方案 + 三层证据兜底
+# FindGap · 1.0.0 · 交接点 Gap 校对器
 
-> **一句话**：扫描你准备发给 AI 的内容（需求/方案/意图），找出会导致返工的 gap → 联网查行业数据佐证 → 搜不到时基于上下文推理兜底 → 给出优化方案 → 用户自己判断。
+> **一句话**：当产出物所有者认为内容已达到自己认知内的最优水平、准备交给下一个人或 agent 时，FindGap 识别并校对那些仍未被看见、但会在下游引发高成本返工的关键 gap。
 >
 > **三节点**：① 扫（受众检测 + 严重度判定）→ ② 查（WebSearch + 上下文推理兜底）→ ③ 出结果（Flat List 输出）。多一步就是多余。
 >
-> **Find\* 系列定位**：FindGap 守护「事前」— 找出你没说清楚的。FindAction 守护「事中」— 打开 Agent 执行的黑盒。FindMiss 守护「事后」— 找出 Agent 没做到的。
+> **定位**：FindGap 不是每轮对话前的 prompt checker，而是 handoff 前最后一道认知校对。它服务的是交接时刻：当 owner 已经觉得内容差不多、准备交给下一个人或 agent 继续推进时，优先识别那些会在下游放大成返工的关键 gap。
 
 ---
 
 ## 触发条件
 
-用户说 `/findgap` `/fg` `/照` `/照妖镜` `照一下`。只扫**按下 Enter 前**你准备发给 AI 的内容。不扫代码、不扫 PR、不扫对话记录、不扫 AI 已交付的输出。
+用户说 `/findgap` `/fg` `/照` `/照妖镜` `照一下`。只在**准备交接给下一个人或 agent 前**扫描当前产出物、需求、方案或意图，做最后一次 handoff 校对。不扫代码、不扫 PR、不扫对话记录、不扫 AI 已交付的输出。
+
+---
+
+## 双模式
+
+### Self-check
+
+适合 owner 自己在 handoff 前做最后一次自检，重点看：
+- 哪些默认前提只存在于自己脑中，没有显式写出
+- 哪些地方自己以为讲清了，但 receiver 未必能按同样方式理解
+- 哪些 gap 已经超出自己当前认知范围，因此不会再主动追问
+
+### Receiver-check
+
+适合接头人或下一个 agent 在接手前做他检，重点看：
+- 如果现在开工，会卡在哪些信息缺口上
+- 哪些地方会迫使自己默认补脑，从而带着错误认知继续做
+- 哪些 gap 会在执行、联调、验收或跨角色协作中放大成返工
+
+双模式只改变观察视角，不改变内部 11 条规则、三节点流程和输出契约。
 
 ---
 
@@ -170,7 +190,7 @@ FindGap · 发现 N 处 gap 可能导致返工
 
 ## 版本
 
-- **v0.9.0**（当前）：FindGap · 下游视角 · 优化方案 · 三层证据兜底 · Flat List 输出
-- v0.8.0：测量校准优先 · 高杠杆规则增强 · V-LAYER/G-WHY 窄调
+- **v1.0.0**（当前）：FindGap · 交接点 Gap 校对器 · handoff 场景 · Self-check / Receiver-check 双模式 · 三层证据兜底 · Flat List 输出
+- v0.9.0：下游视角 · 优化方案 · 三层证据兜底 · Flat List 输出
 - v0.7.0：受众感知 · urgency 判定 · 致命项先行 · 双段输出
 - 历史版本详见 CHANGELOG.md

@@ -1,3 +1,22 @@
+## 1.0.0 — 2026-06-08 · 交接点 Gap 校对器 · 双模式 · CLI 初版
+
+### 产品身份转变
+
+**FROM**：AI request preflight checker
+**TO**：交接点 Gap 校对器 · Handoff Gap Checker
+
+### 核心变更
+
+- 定位从"按 Enter 前检查"收缩为**交接前最后一道认知校对**
+- 新增 Self-check（所有者自检）和 Receiver-check（接头人他检）双模式
+- 新增 TypeScript CLI：`findgap check <file>` / `findgap eval` / `findgap report`
+- 新增 engine 模块化管线：parser → detector → severity → evidence → fallback → advisor → formatter
+- 新增 fixture-driven regression runner（33 cases 覆盖 11 规则）
+- 红线从 4 条增至 5 条，新增"方法可追溯"
+- 版本号统一为 1.0.0
+
+---
+
 ## v0.9.0 — 2026-06-05 · FindGap 品牌 · 优化方案 · 三层证据兜底
 
 ### 产品身份转变

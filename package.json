@@ -1,0 +1,21 @@
+{
+  "name": "findgap",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "findgap": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
